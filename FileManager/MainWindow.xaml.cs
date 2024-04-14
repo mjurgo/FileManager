@@ -12,9 +12,13 @@ namespace FileManager
     /// </summary>
     public partial class MainWindow : Window
     {
+        private IFileService _fileService;
         public MainWindow()
         {
             InitializeComponent();
+            
+            _fileService = new FileService();
+            
             var leftPaneContent = (new FileService()).ListDir(@"C:\\");
             LeftPaneData.ItemsSource = leftPaneContent;
             var rightPaneContent = (new FileService()).ListDir(@"D:\\");
@@ -70,7 +74,14 @@ namespace FileManager
 
         private void OpenFile(IFileSystemEntry item, DataGrid targetGrid)
         {
-            throw new NotImplementedException();
+            if (!_fileService.IsTextFile(item))
+            {
+                return;
+            }
+            
+            TextFileViewWindow window = new TextFileViewWindow();
+            window.Content.Text = _fileService.GetTextFileContent(item.Path);
+            window.Show();
         }
         
         private T? FindParent<T>(DependencyObject child) where T : DependencyObject

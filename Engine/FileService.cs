@@ -1,6 +1,6 @@
 ﻿namespace Engine
 {
-    public class FileService
+    public class FileService : IFileService
     {
         private const string DefaultPath = "C:";
 
@@ -33,12 +33,27 @@
             {
                 fileSystemEntries.Add(
                     new AppFile(
-                        file.FullName, file.Name, file.LastWriteTime
+                        file.FullName, file.Name, file.LastWriteTime, file.Extension
                         )
                     );
             }
 
             return fileSystemEntries;
+        }
+
+        public bool IsTextFile(IFileSystemEntry entry)
+        {
+            if (entry.Extension == null || entry is AppDirectory)
+            {
+                return false;
+            }
+
+            return ((entry as AppFile)!).IsTextFile();
+        }
+
+        public string GetTextFileContent(string filePath)
+        {
+            return File.ReadAllText(filePath);
         }
     }
 }

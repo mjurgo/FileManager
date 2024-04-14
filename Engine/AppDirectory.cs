@@ -4,6 +4,7 @@
     {
         public string Name { get; }
         public string Path { get; }
+        public string? Extension { get; }
         public DateTime Modified { get; }
         public EntryType Type { get; }
 
@@ -12,6 +13,7 @@
         {
             Name = name;
             Path = path;
+            Extension = null;
             Modified = modified;
             Type = EntryType.Directory;
         }
