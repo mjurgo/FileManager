@@ -1,0 +1,39 @@
+﻿<Window x:Class="FileManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FileManager"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Name="LeftPane" Width="*"/>
+            <ColumnDefinition Name="RightPane" Width="*"/>
+        </Grid.ColumnDefinitions>
+        <DataGrid Name="LeftPaneData" Grid.Column="0" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
+                    <EventSetter Event="KeyDown" Handler="Row_KeyDown" />
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Modified" Binding="{Binding Modified}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid Name="RightPaneData" Grid.Column="1" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
+                    <EventSetter Event="KeyDown" Handler="Row_KeyDown" />
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Modified" Binding="{Binding Modified}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
