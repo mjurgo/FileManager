@@ -1,4 +1,6 @@
-﻿namespace Engine
+﻿using System.Collections.ObjectModel;
+
+namespace Engine
 {
     public class FileService : IFileService
     {
@@ -51,9 +53,19 @@
             return ((entry as AppFile)!).IsTextFile();
         }
 
-        public string GetTextFileContent(string filePath)
+        public ObservableCollection<string> GetTextFileContent(string filePath)
         {
-            return File.ReadAllText(filePath);
+            var lines = new ObservableCollection<string>(); 
+            string line;
+            using (StreamReader sr = new StreamReader(filePath))
+            {
+                while ((line = sr.ReadLine()) != null)
+                {
+                    lines.Add(line);
+                }
+                sr.Close();
+            }
+            return lines;
         }
     }
 }

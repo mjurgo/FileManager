@@ -79,8 +79,7 @@ namespace FileManager
                 return;
             }
             
-            TextFileViewWindow window = new TextFileViewWindow();
-            window.Content.Text = _fileService.GetTextFileContent(item.Path);
+            TextFileViewWindow window = new TextFileViewWindow(item.Name, _fileService.GetTextFileContent(item.Path));
             window.Show();
         }
         

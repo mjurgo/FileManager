@@ -5,8 +5,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:FileManager"
         mc:Ignorable="d"
-        Title="TextFileViewWindow" Height="450" Width="800">
+        Title="{Binding FileName}" Height="450" Width="800"
+        x:Name="TextFileWindowView">
     <Grid>
-        <TextBlock Name="Content" FontSize="16" TextWrapping="Wrap" Padding="5,10,5,10" />
+        <!-- <ScrollViewer> -->
+        <!--     ~1~ TODO: Optimize performance, slow with big files @1@ -->
+        <!--     <TextBlock Text="{Binding FileContent}" Name="Content" FontSize="16" TextWrapping="Wrap" Padding="5,10,5,10" /> -->
+        <!-- </ScrollViewer> -->
+        <ScrollViewer>
+            <ItemsControl ItemsSource="{Binding FileContent, ElementName=TextFileWindowView}" Margin="0,-1,0,1">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="16" Padding="5,10,5,10" TextWrapping="Wrap" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </Window>
