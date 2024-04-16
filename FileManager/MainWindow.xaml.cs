@@ -35,10 +35,9 @@ namespace FileManager
         {
             if ((Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift))
             {
-                Debug.WriteLine("MOD CONTROL|SHIFT");
                 if (Keyboard.IsKeyDown(Key.N))
                 {
-                    InputDialogWindow inputWindow = new InputDialogWindow();
+                    InputDialogWindow inputWindow = new InputDialogWindow("Enter the name for new directory");
                     if (inputWindow.ShowDialog() == true)
                     {
                         string input = inputWindow.InputText;
@@ -50,7 +49,6 @@ namespace FileManager
             }
             else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
-                Debug.WriteLine("MOD CONTROL");
                 if (Keyboard.IsKeyDown((Key.Right)))
                 {
                     GetPaneToHandle(sender).GoDirForward();
@@ -77,6 +75,17 @@ namespace FileManager
                     {
                         var pane = GetPaneToHandle(sender);
                         pane.DeleteEntry(sender);
+                        pane.Refresh();
+                    }
+                }
+                else if (e.Key == Key.F2)
+                {
+                    InputDialogWindow inputWindow = new InputDialogWindow("Enter a new name for the item");
+                    if (inputWindow.ShowDialog() == true)
+                    {
+                        string input = inputWindow.InputText;
+                        var pane = GetPaneToHandle(sender);
+                        pane.RenameEntry(sender, input);
                         pane.Refresh();
                     }
                 }

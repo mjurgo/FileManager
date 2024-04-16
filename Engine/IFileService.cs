@@ -8,4 +8,6 @@ public interface IFileService
     public IFileSystemEntry GetFileSystemEntryFromDirPath(string path);
     public void DeleteEntry(IFileSystemEntry entry);
     public void CreateDirectory(string path, string name);
+    void RenameDirectory(string oldPath, string newPath);
+    void RenameFile(string oldPath, string newPath);
 }

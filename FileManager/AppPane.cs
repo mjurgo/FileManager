@@ -123,4 +123,28 @@ public class AppPane
         {
             _fileService.CreateDirectory(_viewHistory[_currentDirIndex].Path, name);
         }
+
+        public void RenameEntry(object sender, string newName)
+        {
+            if (sender is DataGridRow targetRow)
+            {
+                IFileSystemEntry? item = targetRow.Item as IFileSystemEntry;
+                if (item == null)
+                {
+                    return;
+                }
+
+                var newPath = _viewHistory[_currentDirIndex].Path + "\\" + newName; 
+
+                switch (item.Type)
+                {
+                    case EntryType.Directory:
+                        _fileService.RenameDirectory(item.Path, newPath);
+                        break;
+                    case EntryType.File:
+                        _fileService.RenameFile(item.Path, newPath);
+                        break;
+                }
+            }
+        }
 }

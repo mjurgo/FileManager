@@ -72,6 +72,22 @@ namespace Engine
             }
         }
 
+        public void RenameDirectory(string oldPath, string newPath)
+        {
+            if (Directory.Exists(oldPath))
+            {
+                Directory.Move(oldPath, newPath);
+            }
+        }
+
+        public void RenameFile(string oldPath, string newPath)
+        {
+            if (File.Exists(oldPath))
+            {
+                File.Move(oldPath, newPath);
+            }
+        }
+
         public bool IsTextFile(IFileSystemEntry entry)
         {
             if (entry.Extension == null || entry is AppDirectory)
