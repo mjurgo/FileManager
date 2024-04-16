@@ -12,78 +12,55 @@ namespace FileManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        private IFileService _fileService;
+        private readonly IFileService _fileService;
+
+        private AppPane _leftPane;
+        private AppPane _rightPane;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            _leftPane = new AppPane(@"C:\\", LeftPaneData);
+            _rightPane = new AppPane(@"D:\\", RightPaneData);
+
+            LeftPaneData.ItemsSource = _leftPane.Content;
+            RightPaneData.ItemsSource = _rightPane.Content;
             
             _fileService = new FileService();
-            
-            var leftPaneContent = (new FileService()).ListDir(@"C:\\");
-            LeftPaneData.ItemsSource = leftPaneContent;
-            var rightPaneContent = (new FileService()).ListDir(@"D:\\");
-            RightPaneData.ItemsSource = rightPaneContent;
         }
 
         private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            OpenItem(sender);
+            GetPaneToHandle(sender).OpenItem(sender);
         }
         
         private void Row_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
-                OpenItem(sender);
+                if (Keyboard.IsKeyDown((Key.Right)))
+                {
+                    Debug.WriteLine("KEY RIGHT DETECTED");
+                    GetPaneToHandle(sender).GoDirForward();
+                }
+                if (Keyboard.IsKeyDown((Key.Left)))
+                {
+                    Debug.WriteLine("KEY LEFT DETECTED");
+                    GetPaneToHandle(sender).GoDirBack();
+                }
             }
-        }
-
-        private void OpenItem(object sender)
-        {
-            if (sender is DataGridRow clickedRow)
+            else
             {
-                DataGrid? parentDataGrid = FindParent<DataGrid>(clickedRow);
-
-                if (parentDataGrid == null)
+                if (e.Key == Key.Enter)
                 {
-                    throw new Exception("Could not find parent data grid for clicked row");
-                }
-                
-                IFileSystemEntry? item = clickedRow.Item as IFileSystemEntry;
-                if (item == null)
-                {
-                    return;
-                }
-
-                if (item.Type == EntryType.Directory)
-                {
-                    OpenDirectory(item, parentDataGrid);
-                }
-                else if (item.Type == EntryType.File)
-                {
-                    OpenFile(item, parentDataGrid);
+                    GetPaneToHandle(sender).OpenItem(sender);
                 }
             }
         }
 
-        private void OpenDirectory(IFileSystemEntry item, DataGrid targetGrid)
-        {
-            var content = (new FileService()).ListDir(item.Path);
-            targetGrid.ItemsSource = content;
-        }
-
-        private void OpenFile(IFileSystemEntry item, DataGrid targetGrid)
-        {
-            if (!_fileService.IsTextFile(item))
-            {
-                return;
-            }
-            
-            TextFileViewWindow window = new TextFileViewWindow();
-            window.Content.Text = _fileService.GetTextFileContent(item.Path);
-            window.Show();
-        }
         
+
         private T? FindParent<T>(DependencyObject child) where T : DependencyObject
         {
             DependencyObject? parentObject = VisualTreeHelper.GetParent(child);
@@ -93,6 +70,32 @@ namespace FileManager
 
             T? parent = parentObject as T;
             return parent ?? FindParent<T>(parentObject);
+        }
+        
+        private AppPane GetPaneToHandle(object sender)
+        {
+            if (sender is DataGridRow clickedRow)
+            {
+                DataGrid? parentDataGrid = FindParent<DataGrid>(clickedRow);
+
+                if (parentDataGrid == null)
+                {
+                    throw new Exception("Could not find parent data grid for clicked row");
+                }
+
+                if (parentDataGrid.Name == "LeftPaneData")
+                {
+                    return _leftPane;
+                }
+                if (parentDataGrid.Name == "RightPaneData")
+                {
+                    return _rightPane;
+                }
+
+                throw new Exception("Unknown pane name");
+            }
+
+            throw new Exception("Cannot identify sender as DataGridRow");
         }
     }
 }

@@ -41,6 +41,14 @@
             return fileSystemEntries;
         }
 
+        public IFileSystemEntry GetFileSystemEntryFromDirPath(string path)
+        {
+            DirectoryInfo di = new DirectoryInfo(path);
+            return new AppDirectory(
+                di.FullName, di.Name, di.LastWriteTime
+            );
+        }
+
         public bool IsTextFile(IFileSystemEntry entry)
         {
             if (entry.Extension == null || entry is AppDirectory)

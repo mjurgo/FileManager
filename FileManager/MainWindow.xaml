@@ -11,7 +11,10 @@
             <ColumnDefinition Name="LeftPane" Width="*"/>
             <ColumnDefinition Name="RightPane" Width="*"/>
         </Grid.ColumnDefinitions>
-        <DataGrid Name="LeftPaneData" Grid.Column="0" AutoGenerateColumns="False" IsReadOnly="True">
+        <DataGrid Name="LeftPaneData"
+                  Grid.Column="0"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True">
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
                     <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />

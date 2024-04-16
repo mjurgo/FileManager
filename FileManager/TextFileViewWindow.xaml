@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="TextFileViewWindow" Height="450" Width="800">
     <Grid>
-        <TextBlock Name="Content" FontSize="16" TextWrapping="Wrap" Padding="5,10,5,10" />
+        <ScrollViewer>
+            <!-- TODO: Optimize, performance is bad -->
+            <TextBlock Name="Content" FontSize="16" TextWrapping="Wrap" Padding="5,10,5,10" />
+        </ScrollViewer>
     </Grid>
 </Window>

@@ -4,8 +4,10 @@ namespace FileManager;
 
 public partial class TextFileViewWindow : Window
 {
-    public TextFileViewWindow()
+    public TextFileViewWindow(string fileName)
     {
         InitializeComponent();
+
+        Title = fileName;
     }
 }
