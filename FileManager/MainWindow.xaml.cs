@@ -12,10 +12,8 @@ namespace FileManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly IFileService _fileService;
-
-        private AppPane _leftPane;
-        private AppPane _rightPane;
+        private readonly AppPane _leftPane;
+        private readonly AppPane _rightPane;
 
         public MainWindow()
         {
@@ -26,8 +24,6 @@ namespace FileManager
 
             LeftPaneData.ItemsSource = _leftPane.Content;
             RightPaneData.ItemsSource = _rightPane.Content;
-            
-            _fileService = new FileService();
         }
 
         private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
@@ -37,16 +33,30 @@ namespace FileManager
         
         private void Row_KeyDown(object sender, KeyEventArgs e)
         {
-            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            if ((Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift))
             {
+                Debug.WriteLine("MOD CONTROL|SHIFT");
+                if (Keyboard.IsKeyDown(Key.N))
+                {
+                    InputDialogWindow inputWindow = new InputDialogWindow();
+                    if (inputWindow.ShowDialog() == true)
+                    {
+                        string input = inputWindow.InputText;
+                        var pane = GetPaneToHandle(sender);
+                        pane.CreateDirectory(input);
+                        pane.Refresh();
+                    }
+                }
+            }
+            else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                Debug.WriteLine("MOD CONTROL");
                 if (Keyboard.IsKeyDown((Key.Right)))
                 {
-                    Debug.WriteLine("KEY RIGHT DETECTED");
                     GetPaneToHandle(sender).GoDirForward();
                 }
                 if (Keyboard.IsKeyDown((Key.Left)))
                 {
-                    Debug.WriteLine("KEY LEFT DETECTED");
                     GetPaneToHandle(sender).GoDirBack();
                 }
             }
@@ -56,10 +66,22 @@ namespace FileManager
                 {
                     GetPaneToHandle(sender).OpenItem(sender);
                 }
+                else if (e.Key == Key.Delete)
+                {
+                    var confirmed = MessageBox.Show(
+                        "Are you sure you want to delete this item?",
+                        "Confirmation",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
+                    if (confirmed == MessageBoxResult.Yes)
+                    {
+                        var pane = GetPaneToHandle(sender);
+                        pane.DeleteEntry(sender);
+                        pane.Refresh();
+                    }
+                }
             }
         }
-
-        
 
         private T? FindParent<T>(DependencyObject child) where T : DependencyObject
         {

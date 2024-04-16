@@ -99,4 +99,28 @@ public class AppPane
         {
             return _currentDirIndex < _viewHistory.Count - 1;
         }
+
+        public void DeleteEntry(object sender)
+        {
+            if (sender is DataGridRow clickedRow)
+            {
+                IFileSystemEntry? item = clickedRow.Item as IFileSystemEntry;
+                if (item == null)
+                {
+                    return;
+                }
+
+                _fileService.DeleteEntry(item);
+            }
+        }
+
+        public void Refresh()
+        {
+            _assignedGrid.ItemsSource = _fileService.ListDir(_viewHistory[_currentDirIndex].Path);
+        }
+
+        public void CreateDirectory(string name)
+        {
+            _fileService.CreateDirectory(_viewHistory[_currentDirIndex].Path, name);
+        }
 }

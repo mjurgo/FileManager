@@ -1,4 +1,6 @@
-﻿namespace Engine
+﻿using Microsoft.VisualBasic.FileIO;
+
+namespace Engine
 {
     public class FileService : IFileService
     {
@@ -47,6 +49,27 @@
             return new AppDirectory(
                 di.FullName, di.Name, di.LastWriteTime
             );
+        }
+
+        public void DeleteEntry(IFileSystemEntry entry)
+        {
+            if (entry.Type == EntryType.File)
+            {
+                FileSystem.DeleteFile(entry.Path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+            }
+            else if (entry.Type == EntryType.Directory)
+            {
+                FileSystem.DeleteDirectory(entry.Path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+            }
+        }
+
+        public void CreateDirectory(string path, string name)
+        {
+            string fullPath = $@"{path}\{name}";
+            if (!Directory.Exists(fullPath))
+            {
+                Directory.CreateDirectory(fullPath);
+            }
         }
 
         public bool IsTextFile(IFileSystemEntry entry)
