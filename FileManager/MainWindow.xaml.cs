@@ -128,5 +128,11 @@ namespace FileManager
 
             throw new Exception("Cannot identify sender as DataGridRow");
         }
+
+        private void MenuConfiguration_Click(object sender, RoutedEventArgs e)
+        {
+            ConfigWindow window = new ConfigWindow();
+            window.Show();
+        }
     }
 }

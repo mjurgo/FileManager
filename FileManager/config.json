@@ -1,0 +1,21 @@
+﻿{
+  "Panes": [
+    {
+      "name":  "LeftPaneDefaultLocation",
+      "value": "C:",
+      "type": "text"
+    },
+    {
+      "name":  "RightPaneDefaultLocation",
+      "value": "D:",
+      "type": "text"
+    }
+  ], 
+  "Appearance": [
+    {
+      "name":  "Color",
+      "value": "default",
+      "type": "select"
+    }
+  ]
+}

@@ -7,11 +7,21 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Name="LeftPane" Width="*"/>
             <ColumnDefinition Name="RightPane" Width="*"/>
         </Grid.ColumnDefinitions>
+        <Menu Grid.ColumnSpan="2">
+            <MenuItem Header="Configuration">
+                <MenuItem Header="Edit config" Click="MenuConfiguration_Click"/>
+            </MenuItem>
+        </Menu>
         <DataGrid Name="LeftPaneData"
+                  Grid.Row="1"
                   Grid.Column="0"
                   AutoGenerateColumns="False"
                   IsReadOnly="True">
@@ -26,7 +36,8 @@
                 <DataGridTextColumn Header="Modified" Binding="{Binding Modified}" />
             </DataGrid.Columns>
         </DataGrid>
-        <DataGrid Name="RightPaneData" Grid.Column="1" AutoGenerateColumns="False" IsReadOnly="True">
+        <DataGrid Name="RightPaneData"
+                  Grid.Row="1" Grid.Column="1" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
                     <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
