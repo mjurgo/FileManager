@@ -8,6 +8,7 @@ public struct Option
     public string Name { get; set; }
     public string Value { get; set; }
     public OptionType Type { get; set; }
+    public List<string> PossibleValues { get; set; }
 }
 
 public class ConfigManager

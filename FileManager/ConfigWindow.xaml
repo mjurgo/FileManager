@@ -6,6 +6,18 @@
         xmlns:local="clr-namespace:FileManager"
         mc:Ignorable="d"
         Title="ConfigWindow" Height="450" Width="800">
+    <Window.Resources>
+        <DataTemplate x:Key="TextTemplate">
+            <TextBox Text="{Binding Value}" />
+        </DataTemplate>
+        <DataTemplate x:Key="SelectTypeTemplate">
+            <ComboBox ItemsSource="{Binding PossibleValues}" SelectedItem="{Binding Value}">
+            </ComboBox>
+        </DataTemplate>
+        <local:OptionTemplateSelector x:Key="OptionTemplateSelector"
+                                      TextTemplate="{StaticResource TextTemplate}"
+                                      SelectTypeTemplate="{StaticResource SelectTypeTemplate}" />
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Name="CategoriesColumn" Width="0.3*"/>
@@ -13,7 +25,8 @@
         </Grid.ColumnDefinitions>
         <ListBox Name="Categories"
                  Grid.Column="0"
-                 SelectionChanged="Categories_OnSelectionChanged">
+                 SelectionChanged="Categories_OnSelectionChanged"
+                 FontSize="15">
         </ListBox>
         <DataGrid Name="Options"
                   Grid.Column="1"
@@ -21,7 +34,7 @@
                   HeadersVisibility="Column">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="0.5* "/>
-                <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*" />
+                <DataGridTemplateColumn Header="Value" CellTemplateSelector="{StaticResource OptionTemplateSelector}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

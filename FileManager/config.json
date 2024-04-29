@@ -15,7 +15,8 @@
     {
       "name":  "Color",
       "value": "default",
-      "type": "select"
+      "type": "select",
+      "possibleValues": ["default", "light", "dark"]
     }
   ]
 }
