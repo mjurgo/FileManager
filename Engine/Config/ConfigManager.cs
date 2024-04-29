@@ -35,4 +35,14 @@ public class ConfigManager
     {
         return _config[categoryName];
     }
+
+    public string GetLeftPaneDefaultLocation()
+    {
+        return _config["Panes"].Find(option => option.Name == "LeftPaneDefaultLocation").Value;
+    }
+    
+    public string GetRightPaneDefaultLocation()
+    {
+        return _config["Panes"].Find(option => option.Name == "RightPaneDefaultLocation").Value;
+    }
 }

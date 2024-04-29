@@ -4,23 +4,24 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Engine.Config;
 
 namespace FileManager
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private readonly AppPane _leftPane;
         private readonly AppPane _rightPane;
+        private readonly ConfigManager _configManager;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            _leftPane = new AppPane(@"C:\\", LeftPaneData);
-            _rightPane = new AppPane(@"D:\\", RightPaneData);
+            _configManager = new ConfigManager();
+
+            _leftPane = new AppPane(_configManager.GetLeftPaneDefaultLocation(), LeftPaneData);
+            _rightPane = new AppPane(_configManager.GetRightPaneDefaultLocation(), RightPaneData);
 
             LeftPaneData.ItemsSource = _leftPane.Content;
             RightPaneData.ItemsSource = _rightPane.Content;

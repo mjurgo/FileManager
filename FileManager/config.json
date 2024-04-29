@@ -2,12 +2,12 @@
   "Panes": [
     {
       "name":  "LeftPaneDefaultLocation",
-      "value": "C:",
+      "value": "C:/",
       "type": "text"
     },
     {
       "name":  "RightPaneDefaultLocation",
-      "value": "D:",
+      "value": "D:/",
       "type": "text"
     }
   ], 
