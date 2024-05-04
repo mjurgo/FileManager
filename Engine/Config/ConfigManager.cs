@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Engine.Config;
 
-public struct Option
+public class Option
 {
     public string Name { get; set; }
     public string Value { get; set; }
@@ -13,7 +13,7 @@ public struct Option
 
 public class ConfigManager
 {
-    private Dictionary<string, List<Option>> _config;
+    private Dictionary<string?, List<Option>?> _config;
     public ConfigManager()
     {
         var jsonContent = File.ReadAllText("config.json");
@@ -26,14 +26,25 @@ public class ConfigManager
                  throw new FileNotFoundException("Config file not found");
     }
 
-    public List<string> GetConfigCategories()
+    public List<string?> GetConfigCategories()
     {
         return _config.Keys.ToList();
     }
 
-    public List<Option> GetCategoryOptions(string categoryName)
+    public List<Option>? GetCategoryOptions(string? categoryName)
     {
         return _config[categoryName];
+    }
+
+    public void SetCategoryOptions(string? categoryName, List<Option>? options)
+    {
+        _config[categoryName] = options;
+    }
+
+    public void SaveConfig()
+    {
+        string configSerialized = JsonSerializer.Serialize(_config);
+        File.WriteAllText("config.json", configSerialized);
     }
 
     public string GetLeftPaneDefaultLocation()

@@ -8,10 +8,10 @@
         Title="ConfigWindow" Height="450" Width="800">
     <Window.Resources>
         <DataTemplate x:Key="TextTemplate">
-            <TextBox Text="{Binding Value}" />
+            <TextBox Text="{Binding Value}" TextChanged="TextOption_OnTextChanged" />
         </DataTemplate>
         <DataTemplate x:Key="SelectTypeTemplate">
-            <ComboBox ItemsSource="{Binding PossibleValues}" SelectedItem="{Binding Value}">
+            <ComboBox ItemsSource="{Binding PossibleValues}" SelectedItem="{Binding Value}" SelectionChanged="SelectOption_OnSelectionChanged">
             </ComboBox>
         </DataTemplate>
         <local:OptionTemplateSelector x:Key="OptionTemplateSelector"
@@ -28,14 +28,17 @@
                  SelectionChanged="Categories_OnSelectionChanged"
                  FontSize="15">
         </ListBox>
-        <DataGrid Name="Options"
-                  Grid.Column="1"
-                  AutoGenerateColumns="False"
-                  HeadersVisibility="Column">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="0.5* "/>
-                <DataGridTemplateColumn Header="Value" CellTemplateSelector="{StaticResource OptionTemplateSelector}" Width="*" />
-            </DataGrid.Columns>
-        </DataGrid>
+        <DockPanel Grid.Column="1">
+            <Button Content="Save" DockPanel.Dock="Bottom" Height="40" Click="OptionsSave_Click" />
+            <DataGrid Name="Options"
+                      AutoGenerateColumns="False"
+                      HeadersVisibility="Column"
+                      CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="0.5* "/>
+                    <DataGridTemplateColumn Header="Value" CellTemplateSelector="{StaticResource OptionTemplateSelector}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
     </Grid>
 </Window>
