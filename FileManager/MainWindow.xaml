@@ -24,6 +24,7 @@
                   Grid.Row="1"
                   Grid.Column="0"
                   AutoGenerateColumns="False"
+                  SelectionUnit="FullRow"
                   IsReadOnly="True">
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
@@ -37,7 +38,11 @@
             </DataGrid.Columns>
         </DataGrid>
         <DataGrid Name="RightPaneData"
-                  Grid.Row="1" Grid.Column="1" AutoGenerateColumns="False" IsReadOnly="True">
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  AutoGenerateColumns="False"
+                  SelectionUnit="FullRow"
+                  IsReadOnly="True">
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
                     <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />

@@ -25,11 +25,14 @@ namespace FileManager
 
             LeftPaneData.ItemsSource = _leftPane.Content;
             RightPaneData.ItemsSource = _rightPane.Content;
+
+            _leftPane.FocusOnFirstItem();
         }
 
         private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            GetPaneToHandle(sender).OpenItem(sender);
+            var paneToHandle = GetPaneToHandle(sender);
+            paneToHandle.OpenItem(sender);
         }
         
         private void Row_KeyDown(object sender, KeyEventArgs e)
@@ -89,6 +92,10 @@ namespace FileManager
                         pane.RenameEntry(sender, input);
                         pane.Refresh();
                     }
+                }
+                else if (e.Key == Key.F3)
+                {
+                    GetPaneToHandle(sender).OpenItemInternally(sender);
                 }
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Diagnostics;
+using System.Windows.Controls;
 using Engine;
 
 namespace FileManager;
@@ -51,23 +52,23 @@ public class AppPane
             }
             _viewHistory.Add(item);
             _currentDirIndex++;
+            FocusOnFirstItem();
         }
 
         private void OpenFile(IFileSystemEntry item)
         {
-            if (!_fileService.IsTextFile(item))
+            try
             {
-                return;
+                ProcessStartInfo psi = new ProcessStartInfo();
+                psi.FileName = item.Path;
+                psi.UseShellExecute = true;
+                Process.Start(psi);
             }
-            
-            TextFileViewWindow window = new TextFileViewWindow(item.Name)
+            catch (Exception e)
             {
-                Content =
-                {
-                    Text = _fileService.GetTextFileContent(item.Path)
-                }
-            };
-            window.Show();
+                // TODO: Proper log
+                Console.WriteLine(e);
+            }
         }
         
         public void GoDirForward()
@@ -117,6 +118,7 @@ public class AppPane
         public void Refresh()
         {
             _assignedGrid.ItemsSource = _fileService.ListDir(_viewHistory[_currentDirIndex].Path);
+            FocusOnFirstItem();
         }
 
         public void CreateDirectory(string name)
@@ -146,5 +148,45 @@ public class AppPane
                         break;
                 }
             }
+        }
+
+        public void FocusOnFirstItem()
+        {
+            _assignedGrid.SelectedIndex = 0;
+            _assignedGrid.Focus();
+        }
+
+        public void OpenItemInternally(object sender)
+        {
+            if (sender is DataGridRow clickedRow)
+            {
+                IFileSystemEntry? item = clickedRow.Item as IFileSystemEntry;
+                if (item == null)
+                {
+                    return;
+                }
+
+                if (item.Type == EntryType.File)
+                {
+                    OpenFileInternally(item);
+                }
+            }
+        }
+
+        private void OpenFileInternally(IFileSystemEntry item)
+        {
+            if (!_fileService.IsTextFile(item))
+            {
+                return;
+            }
+            
+            TextFileViewWindow window = new TextFileViewWindow(item.Name)
+            {
+                Content =
+                {
+                    Text = _fileService.GetTextFileContent(item.Path)
+                }
+            };
+            window.Show();
         }
 }
