@@ -4,20 +4,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileManager"
+        xmlns:appControls="clr-namespace:FileManager.Controls"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Name="LeftPane" Width="*"/>
-            <ColumnDefinition Name="RightPane" Width="*"/>
+            <ColumnDefinition Name="LeftPane" Width="*" />
+            <ColumnDefinition Name="RightPane" Width="*" />
         </Grid.ColumnDefinitions>
         <Menu Grid.ColumnSpan="2">
             <MenuItem Header="Configuration">
-                <MenuItem Header="Edit config" Click="MenuConfiguration_Click"/>
+                <MenuItem Header="Edit config" Click="MenuConfiguration_Click" />
             </MenuItem>
         </Menu>
         <DataGrid Name="LeftPaneData"
@@ -30,6 +31,11 @@
                 <Style TargetType="DataGridRow">
                     <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
                     <EventSetter Event="KeyDown" Handler="Row_KeyDown" />
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <appControls:ItemContextMenu />
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
@@ -47,6 +53,11 @@
                 <Style TargetType="DataGridRow">
                     <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
                     <EventSetter Event="KeyDown" Handler="Row_KeyDown" />
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <appControls:ItemContextMenu />
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>

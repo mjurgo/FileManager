@@ -111,7 +111,7 @@ namespace FileManager
             return parent ?? FindParent<T>(parentObject);
         }
         
-        private AppPane GetPaneToHandle(object sender)
+        public AppPane GetPaneToHandle(object sender)
         {
             if (sender is DataGridRow clickedRow)
             {
