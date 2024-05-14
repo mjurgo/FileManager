@@ -11,6 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Name="LeftPane" Width="*" />
@@ -43,6 +44,7 @@
                 <DataGridTextColumn Header="Modified" Binding="{Binding Modified}" />
             </DataGrid.Columns>
         </DataGrid>
+        <appControls:PaneSearchBox x:Name="LeftPaneSearch" Grid.Row="2" Grid.Column="0" KeyDown="PaneSearch_OnKeyDown" />
         <DataGrid Name="RightPaneData"
                   Grid.Row="1"
                   Grid.Column="1"
@@ -65,5 +67,6 @@
                 <DataGridTextColumn Header="Modified" Binding="{Binding Modified}" />
             </DataGrid.Columns>
         </DataGrid>
+        <appControls:PaneSearchBox x:Name="RightPaneSearch" Grid.Row="2" Grid.Column="1" KeyDown="PaneSearch_OnKeyDown" />
     </Grid>
 </Window>

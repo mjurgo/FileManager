@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Engine.Config;
+using FileManager.Controls;
 
 namespace FileManager
 {
@@ -34,10 +35,11 @@ namespace FileManager
             var paneToHandle = GetPaneToHandle(sender);
             paneToHandle.OpenItem(sender);
         }
-        
+
         private void Row_KeyDown(object sender, KeyEventArgs e)
         {
-            if ((Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift))
+            if ((Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) ==
+                (ModifierKeys.Control | ModifierKeys.Shift))
             {
                 if (Keyboard.IsKeyDown(Key.N))
                 {
@@ -57,6 +59,7 @@ namespace FileManager
                 {
                     GetPaneToHandle(sender).GoDirForward();
                 }
+
                 if (Keyboard.IsKeyDown((Key.Left)))
                 {
                     GetPaneToHandle(sender).GoDirBack();
@@ -110,7 +113,7 @@ namespace FileManager
             T? parent = parentObject as T;
             return parent ?? FindParent<T>(parentObject);
         }
-        
+
         public AppPane GetPaneToHandle(object sender)
         {
             if (sender is DataGridRow clickedRow)
@@ -126,6 +129,7 @@ namespace FileManager
                 {
                     return _leftPane;
                 }
+
                 if (parentDataGrid.Name == "RightPaneData")
                 {
                     return _rightPane;
@@ -141,6 +145,36 @@ namespace FileManager
         {
             ConfigWindow window = new ConfigWindow();
             window.Show();
+        }
+
+        private void PaneSearch_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            // TODO: Add proper logs in case of errors
+            if (sender is not PaneSearchBox searchBox)
+            {
+                return;
+            }
+
+            if (e.Key == Key.Enter)
+            {
+                var pane = searchBox.Name switch
+                {
+                    "LeftPaneSearch" => _leftPane,
+                    "RightPaneSearch" => _rightPane,
+                    _ => null,
+                };
+                if (pane == null)
+                {
+                    return;
+                }
+
+                var itemFound = pane.FindItemInCurrentLocation(searchBox.PaneSearchTextBox.Text);
+                if (!itemFound)
+                {
+                    MessageBox.Show("Item not found in current location.", "Not found", MessageBoxButton.OK,
+                        MessageBoxImage.Exclamation);
+                }
+            }
         }
     }
 }
