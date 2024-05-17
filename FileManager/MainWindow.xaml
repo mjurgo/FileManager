@@ -30,6 +30,8 @@
                   IsReadOnly="True">
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="{DynamicResource row}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource textrow}"/>
                     <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
                     <EventSetter Event="KeyDown" Handler="Row_KeyDown" />
                     <Setter Property="ContextMenu">
@@ -53,6 +55,8 @@
                   IsReadOnly="True">
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="{DynamicResource row}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource textrow}"/>
                     <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
                     <EventSetter Event="KeyDown" Handler="Row_KeyDown" />
                     <Setter Property="ContextMenu">

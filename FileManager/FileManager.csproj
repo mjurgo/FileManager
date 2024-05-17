@@ -21,7 +21,7 @@
   
   <ItemGroup>
     <!-- I don't event want to comment on the fact that I have to do this... -->
-    <RuntimeHostConfigurationOption Include="System.Windows.Controls.DisableDataGridKeyboardSort" Value="true"/>
+    <RuntimeHostConfigurationOption Include="System.Windows.Controls.DisableDataGridKeyboardSort" Value="true" />
   </ItemGroup>
 
 </Project>

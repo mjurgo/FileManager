@@ -19,6 +19,12 @@
                                       SelectTypeTemplate="{StaticResource SelectTypeTemplate}" />
     </Window.Resources>
     <Grid>
+        <Grid.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Light" Click="LightThemeClick"/>
+                <MenuItem Header="Dark" Click="DarkThemeClick"/>
+            </ContextMenu>
+        </Grid.ContextMenu>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Name="CategoriesColumn" Width="0.3*"/>
             <ColumnDefinition Name="OptionsColumn" Width="*"/>

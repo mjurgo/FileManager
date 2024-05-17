@@ -1,0 +1,70 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+    <SolidColorBrush x:Key="DarkBackgroundColor" Color="#0f1419"/>
+    <SolidColorBrush x:Key="DarkTextColor" Color="#e6e1cf"/>
+    <SolidColorBrush x:Key="DarkGridColor" Color="#333333"/>
+    <SolidColorBrush x:Key="row" Color="#333333"/>
+    <SolidColorBrush x:Key="textrow" Color="#e6e1cf"/>
+    <!-- Style dla tekstu -->
+    <Style TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource DarkTextColor}"/>
+    </Style>
+
+    <!-- Style dla siatek -->
+    <Style TargetType="Grid">
+        <Setter Property="Background" Value="{StaticResource DarkBackgroundColor}"/>
+    </Style>
+
+    <!-- Style dla kolumn siatki -->
+    <Style TargetType="DataGridColumnHeader">
+        <Setter Property="Background" Value="{StaticResource DarkGridColor}"/>
+    </Style>
+    <Style TargetType="ListBox">
+        <Setter Property="Background" Value="#333333"/>
+        <Setter Property="Foreground" Value="{StaticResource DarkTextColor}"/>
+    </Style>
+    <Style TargetType="DataGrid">
+        <Setter Property="Background" Value="#333333"/>
+        <Setter Property="Foreground" Value="{StaticResource DarkTextColor}"/>
+        <Setter Property="BorderBrush" Value="Gray"/>
+    </Style>
+    <Style TargetType="TextBox">
+        <Setter Property="Background" Value="#444444"/>
+        <Setter Property="Foreground" Value="{StaticResource DarkTextColor}"/>
+    </Style>
+
+    <Style TargetType="ComboBox">
+        <Setter Property="Background" Value="{DynamicResource DarkGridColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource DarkTextColor}"/>
+    </Style>
+    <Style TargetType="Window">
+        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="Background" Value="{StaticResource DarkBackgroundColor}"/>
+    </Style>
+    <Style TargetType="DataGridTextColumn">
+        <Setter Property="Foreground" Value="{StaticResource DarkTextColor}"/>
+    </Style>
+    <Style TargetType="Menu">
+        <Setter Property="Background" Value="{StaticResource DarkBackgroundColor}"/>
+    </Style>
+    <Style TargetType="DataGridRow">
+        <Setter Property="Background" Value="{StaticResource DarkGridColor}"/>
+        <Setter Property="Foreground" Value="{StaticResource DarkTextColor}"/>
+    </Style>
+    <Style TargetType="DataGridRowHeader">
+        <Setter Property="Background" Value="{StaticResource DarkGridColor}"/>
+        <Setter Property="Foreground" Value="{StaticResource DarkTextColor}"/>
+    </Style>
+    <Style TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource DarkGridColor}"/>
+        <Setter Property="Foreground" Value="{StaticResource DarkTextColor}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="black"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>
