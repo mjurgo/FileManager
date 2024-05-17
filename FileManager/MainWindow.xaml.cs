@@ -31,7 +31,8 @@ namespace FileManager
         {
             GetPaneToHandle(sender).OpenItem(sender);
         }
-        
+       
+
         private void Row_KeyDown(object sender, KeyEventArgs e)
         {
             if ((Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift))

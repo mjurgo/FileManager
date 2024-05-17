@@ -19,6 +19,12 @@
                                       SelectTypeTemplate="{StaticResource SelectTypeTemplate}" />
     </Window.Resources>
     <Grid>
+        <Grid.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Light" Click="LightThemeClick"/>
+                <MenuItem Header="Dark" Click="DarkThemeClick"/>
+            </ContextMenu>
+        </Grid.ContextMenu>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Name="CategoriesColumn" Width="0.3*"/>
             <ColumnDefinition Name="OptionsColumn" Width="*"/>
@@ -31,7 +37,7 @@
         <DataGrid Name="Options"
                   Grid.Column="1"
                   AutoGenerateColumns="False"
-                  HeadersVisibility="Column">
+                  HeadersVisibility="Column" SelectionChanged="Options_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="0.5* "/>
                 <DataGridTemplateColumn Header="Value" CellTemplateSelector="{StaticResource OptionTemplateSelector}" Width="*" />
