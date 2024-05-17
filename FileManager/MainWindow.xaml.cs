@@ -55,14 +55,22 @@ namespace FileManager
             }
             else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
-                if (Keyboard.IsKeyDown((Key.Right)))
+                if (Keyboard.IsKeyDown(Key.OemPeriod))
                 {
                     GetPaneToHandle(sender).GoDirForward();
                 }
 
-                if (Keyboard.IsKeyDown((Key.Left)))
+                if (Keyboard.IsKeyDown(Key.OemComma))
                 {
                     GetPaneToHandle(sender).GoDirBack();
+                }
+
+                if (Keyboard.IsKeyDown(Key.F))
+                {
+                    var pane = GetPaneToHandle(sender);
+                    Keyboard.Focus(pane.GetGridName() == "LeftPaneData"
+                        ? LeftPaneSearch.PaneSearchTextBox
+                        : RightPaneSearch.PaneSearchTextBox);
                 }
             }
             else

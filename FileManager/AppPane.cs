@@ -11,7 +11,7 @@ public class AppPane
     private readonly DataGrid _assignedGrid;
 
     private readonly IFileService _fileService = new FileService();
-    private readonly List<IFileSystemEntry> _viewHistory = new List<IFileSystemEntry>();
+    private readonly List<IFileSystemEntry> _viewHistory = [];
     private int _currentDirIndex;
 
     public AppPane(string path, DataGrid assignedGrid)
@@ -60,9 +60,11 @@ public class AppPane
     {
         try
         {
-            ProcessStartInfo psi = new ProcessStartInfo();
-            psi.FileName = item.Path;
-            psi.UseShellExecute = true;
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = item.Path,
+                UseShellExecute = true
+            };
             Process.Start(psi);
         }
         catch (Exception e)
@@ -220,5 +222,10 @@ public class AppPane
         }
 
         return null;
+    }
+
+    public string GetGridName()
+    {
+        return _assignedGrid.Name;
     }
 }
