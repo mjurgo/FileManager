@@ -10,4 +10,6 @@ public interface IFileService
     public void CreateDirectory(string path, string name);
     void RenameDirectory(string oldPath, string newPath);
     void RenameFile(string oldPath, string newPath);
+    public List<IFileSystemEntry> GetFileSystemEntriesAsPaths(FileSystemInfo[] items);
+    public IFileSystemEntry CreateSearchResultEntry(string path);
 }

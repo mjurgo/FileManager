@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.IO;
+using System.Security.Policy;
 using System.Windows.Controls;
 using Engine;
 
@@ -88,6 +90,10 @@ public class AppPane
     {
         if (CanGoDirBack())
         {
+            if (_viewHistory[_currentDirIndex].Type == EntryType.SearchResult)
+            {
+                _viewHistory.Remove(_viewHistory[_currentDirIndex]);
+            }
             Content = _fileService.ListDir(_viewHistory[_currentDirIndex - 1].Path);
             _currentDirIndex--;
             _assignedGrid.ItemsSource = Content;
@@ -209,6 +215,19 @@ public class AppPane
 
         FocusOnItem((int)itemIndex);
         return true;
+    }
+
+    public bool FindItem(string name)
+    {
+        // TODO: move to FileService
+        var di = new DirectoryInfo(_viewHistory[_currentDirIndex].Path);
+        var items = di.GetFileSystemInfos($"*{name}*", SearchOption.AllDirectories);
+
+        _assignedGrid.ItemsSource = _fileService.GetFileSystemEntriesAsPaths(items);
+        _viewHistory.Add(_fileService.CreateSearchResultEntry(_viewHistory[_currentDirIndex].Path));
+        _currentDirIndex++;
+
+        return items.Length > 0;
     }
 
     private int? FindItemIndexInCurrentLocation(string name)
