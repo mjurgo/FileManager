@@ -110,7 +110,7 @@ public class AppPane
         return _currentDirIndex < _viewHistory.Count - 1;
     }
 
-    public void DeleteEntry(object sender)
+    public void DeleteEntryAsRow(object sender)
     {
         if (sender is DataGridRow clickedRow)
         {
@@ -122,6 +122,11 @@ public class AppPane
 
             _fileService.DeleteEntry(item);
         }
+    }
+
+    public void DeleteEntry(IFileSystemEntry entry)
+    {
+        _fileService.DeleteEntry(entry);
     }
 
     public void Refresh()
@@ -246,5 +251,10 @@ public class AppPane
     public string GetGridName()
     {
         return _assignedGrid.Name;
+    }
+
+    public DataGrid GetGrid()
+    {
+        return _assignedGrid;
     }
 }

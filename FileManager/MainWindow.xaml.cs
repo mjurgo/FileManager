@@ -101,15 +101,23 @@ namespace FileManager
                 }
                 else if (e.Key == Key.Delete)
                 {
+                    var pane = GetPaneToHandle(sender);
+                    var selectedItems = pane.GetGrid().SelectedItems;
+                    var msg = selectedItems.Count > 1
+                        ? $"Are you sure you want to delete multiple items ({selectedItems.Count})?"
+                        : "Are you sure you want to delete this item?";
+
                     var confirmed = MessageBox.Show(
-                        "Are you sure you want to delete this item?",
+                        msg,
                         "Confirmation",
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Question);
                     if (confirmed == MessageBoxResult.Yes)
                     {
-                        var pane = GetPaneToHandle(sender);
-                        pane.DeleteEntry(sender);
+                        foreach (IFileSystemEntry entry in selectedItems)
+                        {
+                            pane.DeleteEntry(entry);
+                        }
                         pane.Refresh();
                     }
                 }
