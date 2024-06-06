@@ -8,26 +8,43 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <!-- Definicje wierszy -->
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
+
+        <!-- Definicje kolumn -->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Name="LeftPane" Width="*" />
             <ColumnDefinition Name="RightPane" Width="*" />
         </Grid.ColumnDefinitions>
+
+
         <Menu Grid.ColumnSpan="2">
             <MenuItem Header="Configuration">
                 <MenuItem Header="Edit config" Click="MenuConfiguration_Click" />
             </MenuItem>
         </Menu>
+
+
+        <Button Grid.Row="1" Grid.Column="0"   Width="56" Height="auto"  HorizontalAlignment="Left" Margin="0,0,0,20">
+            <TextBlock Text="&#x27F5;"  VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"/>
+        </Button>
+        <Button Grid.Row="1" Grid.Column="1"  Width="56"  HorizontalAlignment="Left" Margin="0,0,0,20">
+            <TextBlock Text="&#x27F5;"  VerticalAlignment="Bottom" Width="23" Height="16" HorizontalAlignment="Center"/>
+        </Button>
+        <Button Grid.Row="1" Grid.Column="0" Content="&#x27F6;"  Width="56" Height="auto"  HorizontalAlignment="Left" Margin="56,0,0,20" FontWeight="Bold" Click="Button_Click"/>
+        <Button Grid.Row="1" Grid.Column="1" Content="&#x27F6;" Width="56"  HorizontalAlignment="Left" Margin="56,0,0,20" FontWeight="Bold"/>
+        <!-- Lewy panel danych -->
         <DataGrid Name="LeftPaneData"
                   Grid.Row="1"
                   Grid.Column="0"
                   AutoGenerateColumns="False"
                   SelectionUnit="FullRow"
-                  IsReadOnly="True">
+                  IsReadOnly="True" Margin="0,20,0,0" Grid.RowSpan="2">
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
                     <Setter Property="Background" Value="{DynamicResource row}"/>
@@ -46,13 +63,16 @@
                 <DataGridTextColumn Header="Modified" Binding="{Binding Modified}" />
             </DataGrid.Columns>
         </DataGrid>
-        <appControls:PaneSearchBox x:Name="LeftPaneSearch" Grid.Row="2" Grid.Column="0" KeyDown="PaneSearch_OnKeyDown" />
+
+        <appControls:PaneSearchBox x:Name="LeftPaneSearch" Grid.Row="3" Grid.Column="0" KeyDown="PaneSearch_OnKeyDown" />
+
+        <!-- Prawy panel danych -->
         <DataGrid Name="RightPaneData"
                   Grid.Row="1"
                   Grid.Column="1"
                   AutoGenerateColumns="False"
                   SelectionUnit="FullRow"
-                  IsReadOnly="True">
+                  IsReadOnly="True" Margin="0,20,0,0" Grid.RowSpan="2">
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
                     <Setter Property="Background" Value="{DynamicResource row}"/>
@@ -71,6 +91,8 @@
                 <DataGridTextColumn Header="Modified" Binding="{Binding Modified}" />
             </DataGrid.Columns>
         </DataGrid>
-        <appControls:PaneSearchBox x:Name="RightPaneSearch" Grid.Row="2" Grid.Column="1" KeyDown="PaneSearch_OnKeyDown" />
+
+        <appControls:PaneSearchBox x:Name="RightPaneSearch" Grid.Row="3" Grid.Column="1" KeyDown="PaneSearch_OnKeyDown" />
+   
     </Grid>
 </Window>

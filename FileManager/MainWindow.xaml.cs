@@ -184,5 +184,15 @@ namespace FileManager
                 }
             }
         }
+
+        private void LeftPaneData_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
