@@ -257,4 +257,9 @@ public class AppPane
     {
         return _assignedGrid;
     }
+
+    public string GetCurrentPath()
+    {
+        return _viewHistory[_currentDirIndex].Path;
+    }
 }
