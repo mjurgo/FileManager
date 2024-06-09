@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.IO;
+using System.Security.Policy;
 using System.Windows.Controls;
 using Engine;
 
@@ -88,6 +90,10 @@ public class AppPane
     {
         if (CanGoDirBack())
         {
+            if (_viewHistory[_currentDirIndex].Type == EntryType.SearchResult)
+            {
+                _viewHistory.Remove(_viewHistory[_currentDirIndex]);
+            }
             Content = _fileService.ListDir(_viewHistory[_currentDirIndex - 1].Path);
             _currentDirIndex--;
             _assignedGrid.ItemsSource = Content;
@@ -104,7 +110,7 @@ public class AppPane
         return _currentDirIndex < _viewHistory.Count - 1;
     }
 
-    public void DeleteEntry(object sender)
+    public void DeleteEntryAsRow(object sender)
     {
         if (sender is DataGridRow clickedRow)
         {
@@ -116,6 +122,11 @@ public class AppPane
 
             _fileService.DeleteEntry(item);
         }
+    }
+
+    public void DeleteEntry(IFileSystemEntry entry)
+    {
+        _fileService.DeleteEntry(entry);
     }
 
     public void Refresh()
@@ -211,6 +222,19 @@ public class AppPane
         return true;
     }
 
+    public bool FindItem(string name)
+    {
+        // TODO: move to FileService
+        var di = new DirectoryInfo(_viewHistory[_currentDirIndex].Path);
+        var items = di.GetFileSystemInfos($"*{name}*", SearchOption.AllDirectories);
+
+        _assignedGrid.ItemsSource = _fileService.GetFileSystemEntriesAsPaths(items);
+        _viewHistory.Add(_fileService.CreateSearchResultEntry(_viewHistory[_currentDirIndex].Path));
+        _currentDirIndex++;
+
+        return items.Length > 0;
+    }
+
     private int? FindItemIndexInCurrentLocation(string name)
     {
         for (int i = 0; i < Content.Count; i++)
@@ -227,5 +251,10 @@ public class AppPane
     public string GetGridName()
     {
         return _assignedGrid.Name;
+    }
+
+    public DataGrid GetGrid()
+    {
+        return _assignedGrid;
     }
 }

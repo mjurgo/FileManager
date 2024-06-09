@@ -44,12 +44,32 @@ namespace FileManager
                 if (Keyboard.IsKeyDown(Key.N))
                 {
                     InputDialogWindow inputWindow = new InputDialogWindow("Enter the name for new directory");
+                    inputWindow.Owner = this;
                     if (inputWindow.ShowDialog() == true)
                     {
                         string input = inputWindow.InputText;
                         var pane = GetPaneToHandle(sender);
                         pane.CreateDirectory(input);
                         pane.Refresh();
+                    }
+                }
+
+                if (Keyboard.IsKeyDown(Key.F))
+                {
+                    InputDialogWindow inputWindow = new InputDialogWindow("Enter name of the file to search for:");
+                    inputWindow.Owner = this;
+                    inputWindow.Title = "Find file";
+                    if (inputWindow.ShowDialog() == true)
+                    {
+                        string input = inputWindow.InputText;
+                        var pane = GetPaneToHandle(sender);
+                        bool found = pane.FindItem(input);
+                        if (!found)
+                        {
+                            MessageBox.Show("Item not found in current and nested directories.", "Not found",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
+                        }
                     }
                 }
             }
@@ -81,21 +101,30 @@ namespace FileManager
                 }
                 else if (e.Key == Key.Delete)
                 {
+                    var pane = GetPaneToHandle(sender);
+                    var selectedItems = pane.GetGrid().SelectedItems;
+                    var msg = selectedItems.Count > 1
+                        ? $"Are you sure you want to delete multiple items ({selectedItems.Count})?"
+                        : "Are you sure you want to delete this item?";
+
                     var confirmed = MessageBox.Show(
-                        "Are you sure you want to delete this item?",
+                        msg,
                         "Confirmation",
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Question);
                     if (confirmed == MessageBoxResult.Yes)
                     {
-                        var pane = GetPaneToHandle(sender);
-                        pane.DeleteEntry(sender);
+                        foreach (IFileSystemEntry entry in selectedItems)
+                        {
+                            pane.DeleteEntry(entry);
+                        }
                         pane.Refresh();
                     }
                 }
                 else if (e.Key == Key.F2)
                 {
                     InputDialogWindow inputWindow = new InputDialogWindow("Enter a new name for the item");
+                    inputWindow.Owner = this;
                     if (inputWindow.ShowDialog() == true)
                     {
                         string input = inputWindow.InputText;

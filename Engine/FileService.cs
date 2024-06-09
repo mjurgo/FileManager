@@ -28,16 +28,17 @@ namespace Engine
                 fileSystemEntries.Add(
                     new AppDirectory(
                         dir.FullName, dir.Name, dir.LastWriteTime
-                        )
-                    );
+                    )
+                );
             }
+
             foreach (var file in files)
             {
                 fileSystemEntries.Add(
                     new AppFile(
                         file.FullName, file.Name, file.LastWriteTime, file.Extension
-                        )
-                    );
+                    )
+                );
             }
 
             return fileSystemEntries;
@@ -101,6 +102,36 @@ namespace Engine
         public string GetTextFileContent(string filePath)
         {
             return File.ReadAllText(filePath);
+        }
+
+        public List<IFileSystemEntry> GetFileSystemEntriesAsPaths(FileSystemInfo[] items)
+        {
+            var entries = new List<IFileSystemEntry>();
+            foreach (FileSystemInfo item in items)
+            {
+                if (item is DirectoryInfo)
+                {
+                    entries.Add(
+                        new AppDirectory(
+                            item.FullName, item.FullName, item.LastWriteTime
+                        ));
+                }
+                else if (item is FileInfo)
+                {
+                    entries.Add(
+                        new AppFile(
+                            item.FullName, item.FullName, item.LastWriteTime, item.Extension
+                        )
+                    );
+                }
+            }
+
+            return entries;
+        }
+
+        public IFileSystemEntry CreateSearchResultEntry(string path)
+        {
+            return new AppSearchResult(path, path, DateTime.Now);
         }
     }
 }
