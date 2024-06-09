@@ -34,8 +34,11 @@
         <Setter Property="Background" Value="#444444"/>
         <Setter Property="Foreground" Value="{StaticResource DarkTextColor}"/>
     </Style>
-
     <Style TargetType="ComboBox">
+        <Setter Property="Background" Value="{DynamicResource DarkGridColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource DarkTextColor}"/>
+    </Style>
+    <Style TargetType="ComboBoxItem">
         <Setter Property="Background" Value="{DynamicResource DarkGridColor}"/>
         <Setter Property="Foreground" Value="{DynamicResource DarkTextColor}"/>
     </Style>
@@ -43,9 +46,9 @@
         <Setter Property="BorderBrush" Value="Black"/>
         <Setter Property="Background" Value="{StaticResource DarkBackgroundColor}"/>
     </Style>
-    <Style TargetType="DataGridTextColumn">
-        <Setter Property="Foreground" Value="{StaticResource DarkTextColor}"/>
-    </Style>
+    <!-- <Style TargetType="DataGridTextColumn"> -->
+    <!--     <Setter Property="Foreground" Value="{StaticResource DarkTextColor}"/> -->
+    <!-- </Style> -->
     <Style TargetType="Menu">
         <Setter Property="Background" Value="{StaticResource DarkBackgroundColor}"/>
     </Style>

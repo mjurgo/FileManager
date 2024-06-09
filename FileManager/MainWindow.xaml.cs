@@ -21,6 +21,8 @@ namespace FileManager
 
             _configManager = new ConfigManager();
 
+            AppTheme.ChangeTheme(_configManager.GetCurrentTheme());
+
             _leftPane = new AppPane(_configManager.GetLeftPaneDefaultLocation(), LeftPaneData);
             _rightPane = new AppPane(_configManager.GetRightPaneDefaultLocation(), RightPaneData);
 

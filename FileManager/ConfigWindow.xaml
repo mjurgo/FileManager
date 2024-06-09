@@ -11,7 +11,8 @@
             <TextBox Text="{Binding Value}" TextChanged="TextOption_OnTextChanged" />
         </DataTemplate>
         <DataTemplate x:Key="SelectTypeTemplate">
-            <ComboBox ItemsSource="{Binding PossibleValues}" SelectedItem="{Binding Value}" SelectionChanged="SelectOption_OnSelectionChanged">
+            <ComboBox ItemsSource="{Binding PossibleValues}" SelectedItem="{Binding Value}"
+                      SelectionChanged="SelectOption_OnSelectionChanged">
             </ComboBox>
         </DataTemplate>
         <local:OptionTemplateSelector x:Key="OptionTemplateSelector"
@@ -19,15 +20,9 @@
                                       SelectTypeTemplate="{StaticResource SelectTypeTemplate}" />
     </Window.Resources>
     <Grid>
-        <Grid.ContextMenu>
-            <ContextMenu>
-                <MenuItem Header="Light" Click="LightThemeClick"/>
-                <MenuItem Header="Dark" Click="DarkThemeClick"/>
-            </ContextMenu>
-        </Grid.ContextMenu>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Name="CategoriesColumn" Width="0.3*"/>
-            <ColumnDefinition Name="OptionsColumn" Width="*"/>
+            <ColumnDefinition Name="CategoriesColumn" Width="0.3*" />
+            <ColumnDefinition Name="OptionsColumn" Width="*" />
         </Grid.ColumnDefinitions>
         <ListBox Name="Categories"
                  Grid.Column="0"
@@ -41,8 +36,9 @@
                       HeadersVisibility="Column"
                       CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="0.5* "/>
-                    <DataGridTemplateColumn Header="Value" CellTemplateSelector="{StaticResource OptionTemplateSelector}" Width="*" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="0.5* " />
+                    <DataGridTemplateColumn Header="Value"
+                                            CellTemplateSelector="{StaticResource OptionTemplateSelector}" Width="*" />
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>

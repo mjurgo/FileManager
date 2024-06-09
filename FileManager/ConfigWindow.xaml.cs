@@ -24,17 +24,6 @@ public partial class ConfigWindow : Window
         var options = _configManager.GetCategoryOptions(selectedCategory);
         Options.ItemsSource = options;
     }
-    private void LightThemeClick(object sender, RoutedEventArgs e)
-    {
-
-        AppTheme.ChangeTheme(new Uri("Themes/Light.xaml", UriKind.Relative));
-
-    }
-
-    private void DarkThemeClick(object sender, RoutedEventArgs e)
-    {
-        AppTheme.ChangeTheme(new Uri("Themes/Dark.xaml", UriKind.Relative));
-    }
 
     private void OptionsSave_Click(object sender, RoutedEventArgs e)
     {
@@ -47,6 +36,8 @@ public partial class ConfigWindow : Window
         }
         _configManager.SetCategoryOptions(category, options);
         _configManager.SaveConfig();
+        
+        AppTheme.ChangeTheme(_configManager.GetCurrentTheme());
     }
 
     private void TextOption_OnTextChanged(object sender, TextChangedEventArgs e)
