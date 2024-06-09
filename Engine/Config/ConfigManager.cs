@@ -56,4 +56,9 @@ public class ConfigManager
     {
         return _config["Panes"].Find(option => option.Name == "RightPaneDefaultLocation").Value;
     }
+
+    public string GetCurrentTheme()
+    {
+        return _config["Appearance"].Find(option => option.Name == "Color").Value;
+    }
 }

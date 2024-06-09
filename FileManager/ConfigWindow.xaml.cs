@@ -36,6 +36,8 @@ public partial class ConfigWindow : Window
         }
         _configManager.SetCategoryOptions(category, options);
         _configManager.SaveConfig();
+        
+        AppTheme.ChangeTheme(_configManager.GetCurrentTheme());
     }
 
     private void TextOption_OnTextChanged(object sender, TextChangedEventArgs e)

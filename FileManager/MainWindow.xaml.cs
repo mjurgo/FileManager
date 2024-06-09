@@ -21,6 +21,8 @@ namespace FileManager
 
             _configManager = new ConfigManager();
 
+            AppTheme.ChangeTheme(_configManager.GetCurrentTheme());
+
             _leftPane = new AppPane(_configManager.GetLeftPaneDefaultLocation(), LeftPaneData);
             _rightPane = new AppPane(_configManager.GetRightPaneDefaultLocation(), RightPaneData);
 
@@ -212,6 +214,38 @@ namespace FileManager
                         MessageBoxImage.Exclamation);
                 }
             }
+        }
+
+        private void GoBackButton_Click(object sender, RoutedEventArgs e)
+        {
+            var pane = (sender as Button).Name switch
+            {
+                "LeftPaneGoBackButton" => _leftPane,
+                "RightPaneGoBackButton" => _rightPane,
+                _ => null,
+            };
+            if (pane == null)
+            {
+                return;
+            }
+
+            pane.GoDirBack();
+        }
+
+        private void GoForwardButton_Click(object sender, RoutedEventArgs e)
+        {
+            var pane = (sender as Button).Name switch
+            {
+                "LeftPaneGoForwardButton" => _leftPane,
+                "RightPaneGoForwardButton" => _rightPane,
+                _ => null,
+            };
+            if (pane == null)
+            {
+                return;
+            }
+
+            pane.GoDirForward();
         }
     }
 }

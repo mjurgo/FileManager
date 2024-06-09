@@ -14,9 +14,9 @@
   "Appearance": [
     {
       "name":  "Color",
-      "value": "default",
+      "value": "Default",
       "type": "select",
-      "possibleValues": ["default", "light", "dark"]
+      "possibleValues": ["Default", "Light", "Dark"]
     }
   ]
 }
