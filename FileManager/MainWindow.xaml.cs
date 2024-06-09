@@ -185,14 +185,36 @@ namespace FileManager
             }
         }
 
-        private void LeftPaneData_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void GoBackButton_Click(object sender, RoutedEventArgs e)
         {
+            var pane = (sender as Button).Name switch
+            {
+                "LeftPaneGoBackButton" => _leftPane,
+                "RightPaneGoBackButton" => _rightPane,
+                _ => null,
+            };
+            if (pane == null)
+            {
+                return;
+            }
 
+            pane.GoDirBack();
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void GoForwardButton_Click(object sender, RoutedEventArgs e)
         {
+            var pane = (sender as Button).Name switch
+            {
+                "LeftPaneGoForwardButton" => _leftPane,
+                "RightPaneGoForwardButton" => _rightPane,
+                _ => null,
+            };
+            if (pane == null)
+            {
+                return;
+            }
 
+            pane.GoDirForward();
         }
     }
 }
