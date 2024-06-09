@@ -59,7 +59,38 @@ public partial class ItemContextMenu : ContextMenu
             {
                 pane.DeleteEntry(entry);
             }
+
             pane.Refresh();
         }
+    }
+
+    private void Cut_OnClick(object sender, RoutedEventArgs e)
+    {
+        ContextMenu contextMenu = (ContextMenu)((MenuItem)sender).Parent;
+        DataGridRow row = (DataGridRow)contextMenu.PlacementTarget;
+        var currentMainWindow = Application.Current.MainWindow as MainWindow;
+
+        var selectedItems = currentMainWindow.GetPaneToHandle(row).GetGrid().SelectedItems;
+        currentMainWindow.ClearFilesToCut();
+        foreach (IFileSystemEntry entry in selectedItems)
+        {
+            currentMainWindow.AddItemToCut(entry);
+        }
+        currentMainWindow.ClearFilesToCopy();
+    }
+
+    private void Copy_OnClick(object sender, RoutedEventArgs e)
+    {
+        ContextMenu contextMenu = (ContextMenu)((MenuItem)sender).Parent;
+        DataGridRow row = (DataGridRow)contextMenu.PlacementTarget;
+        var currentMainWindow = Application.Current.MainWindow as MainWindow;
+
+        var selectedItems = currentMainWindow.GetPaneToHandle(row).GetGrid().SelectedItems;
+        currentMainWindow.ClearFilesToCopy();
+        foreach (IFileSystemEntry entry in selectedItems)
+        {
+            currentMainWindow.AddItemToCopy(entry);
+        }
+        currentMainWindow.ClearFilesToCut();
     }
 }

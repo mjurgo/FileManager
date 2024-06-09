@@ -133,5 +133,22 @@ namespace Engine
         {
             return new AppSearchResult(path, path, DateTime.Now);
         }
+
+        public void CopyDirectory(DirectoryInfo source, DirectoryInfo target)
+        {
+            Directory.CreateDirectory(target.FullName);
+
+            foreach (FileInfo fi in source.GetFiles())
+            {
+                fi.CopyTo(Path.Combine(target.FullName, fi.Name), true);
+            }
+
+            foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
+            {
+                DirectoryInfo nextTargetSubDir =
+                    target.CreateSubdirectory(diSourceSubDir.Name);
+                CopyDirectory(diSourceSubDir, nextTargetSubDir);
+            }
+        }
     }
 }

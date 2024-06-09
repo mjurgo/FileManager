@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using Engine;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,12 +15,17 @@ namespace FileManager
         private readonly AppPane _leftPane;
         private readonly AppPane _rightPane;
         private readonly ConfigManager _configManager;
+        private readonly IFileService _fileService;
+
+        private readonly List<IFileSystemEntry> _itemsToCut = [];
+        private readonly List<IFileSystemEntry> _itemsToCopy = [];
 
         public MainWindow()
         {
             InitializeComponent();
 
             _configManager = new ConfigManager();
+            _fileService = new FileService();
 
             AppTheme.ChangeTheme(_configManager.GetCurrentTheme());
 
@@ -94,50 +100,88 @@ namespace FileManager
                         ? LeftPaneSearch.PaneSearchTextBox
                         : RightPaneSearch.PaneSearchTextBox);
                 }
-            }
-            else
-            {
-                if (e.Key == Key.Enter)
-                {
-                    GetPaneToHandle(sender).OpenItem(sender);
-                }
-                else if (e.Key == Key.Delete)
+
+                if (Keyboard.IsKeyDown(Key.V))
                 {
                     var pane = GetPaneToHandle(sender);
-                    var selectedItems = pane.GetGrid().SelectedItems;
-                    var msg = selectedItems.Count > 1
-                        ? $"Are you sure you want to delete multiple items ({selectedItems.Count})?"
-                        : "Are you sure you want to delete this item?";
-
-                    var confirmed = MessageBox.Show(
-                        msg,
-                        "Confirmation",
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Question);
-                    if (confirmed == MessageBoxResult.Yes)
+                    if (_itemsToCut.Count > 0)
                     {
-                        foreach (IFileSystemEntry entry in selectedItems)
+                        foreach (IFileSystemEntry item in _itemsToCut)
                         {
-                            pane.DeleteEntry(entry);
+                            if (item.Type == EntryType.File)
+                            {
+                                File.Move(item.Path, @$"{pane.GetCurrentPath()}\{item.Name}");
+                            }
+                            else if (item.Type == EntryType.Directory)
+                            {
+                                Directory.Move(item.Path, @$"{pane.GetCurrentPath()}\{item.Name}");
+                            }
                         }
-                        pane.Refresh();
+                        _itemsToCut.Clear();
                     }
-                }
-                else if (e.Key == Key.F2)
-                {
-                    InputDialogWindow inputWindow = new InputDialogWindow("Enter a new name for the item");
-                    inputWindow.Owner = this;
-                    if (inputWindow.ShowDialog() == true)
+                    else
                     {
-                        string input = inputWindow.InputText;
-                        var pane = GetPaneToHandle(sender);
-                        pane.RenameEntry(sender, input);
-                        pane.Refresh();
+                        foreach (IFileSystemEntry item in _itemsToCopy)
+                        {
+                            if (item.Type == EntryType.File)
+                            {
+                                File.Copy(item.Path, @$"{pane.GetCurrentPath()}\{item.Name}");
+                            }
+                            else if (item.Type == EntryType.Directory)
+                            {
+                                var sourceDir = new DirectoryInfo(item.Path);
+                                var targetDir = new DirectoryInfo(@$"{pane.GetCurrentPath()}\{item.Name}");
+                                _fileService.CopyDirectory(sourceDir, targetDir);
+                            }
+                        }
                     }
+                    pane.Refresh();
                 }
-                else if (e.Key == Key.F3)
+                else
                 {
-                    GetPaneToHandle(sender).OpenItemInternally(sender);
+                    if (e.Key == Key.Enter)
+                    {
+                        GetPaneToHandle(sender).OpenItem(sender);
+                    }
+                    else if (e.Key == Key.Delete)
+                    {
+                        var pane = GetPaneToHandle(sender);
+                        var selectedItems = pane.GetGrid().SelectedItems;
+                        var msg = selectedItems.Count > 1
+                            ? $"Are you sure you want to delete multiple items ({selectedItems.Count})?"
+                            : "Are you sure you want to delete this item?";
+
+                        var confirmed = MessageBox.Show(
+                            msg,
+                            "Confirmation",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Question);
+                        if (confirmed == MessageBoxResult.Yes)
+                        {
+                            foreach (IFileSystemEntry entry in selectedItems)
+                            {
+                                pane.DeleteEntry(entry);
+                            }
+
+                            pane.Refresh();
+                        }
+                    }
+                    else if (e.Key == Key.F2)
+                    {
+                        InputDialogWindow inputWindow = new InputDialogWindow("Enter a new name for the item");
+                        inputWindow.Owner = this;
+                        if (inputWindow.ShowDialog() == true)
+                        {
+                            string input = inputWindow.InputText;
+                            var pane = GetPaneToHandle(sender);
+                            pane.RenameEntry(sender, input);
+                            pane.Refresh();
+                        }
+                    }
+                    else if (e.Key == Key.F3)
+                    {
+                        GetPaneToHandle(sender).OpenItemInternally(sender);
+                    }
                 }
             }
         }
@@ -246,6 +290,26 @@ namespace FileManager
             }
 
             pane.GoDirForward();
+        }
+
+        public void AddItemToCut(IFileSystemEntry item)
+        {
+            _itemsToCut.Add(item);
+        }
+
+        public void AddItemToCopy(IFileSystemEntry item)
+        {
+            _itemsToCopy.Add(item);
+        }
+
+        public void ClearFilesToCut()
+        {
+            _itemsToCut.Clear();
+        }
+
+        public void ClearFilesToCopy()
+        {
+            _itemsToCopy.Clear();
         }
     }
 }

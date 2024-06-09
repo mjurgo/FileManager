@@ -3,5 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <MenuItem Header="Open" Click="Open_OnClick" />
     <MenuItem Header="Rename" Click="Rename_OnClick" />
+    <MenuItem Header="Copy" Click="Copy_OnClick" />
+    <MenuItem Header="Cut" Click="Cut_OnClick" />
     <MenuItem Header="Delete" Click="Delete_OnClick" />
 </ContextMenu>

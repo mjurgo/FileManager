@@ -12,4 +12,5 @@ public interface IFileService
     void RenameFile(string oldPath, string newPath);
     public List<IFileSystemEntry> GetFileSystemEntriesAsPaths(FileSystemInfo[] items);
     public IFileSystemEntry CreateSearchResultEntry(string path);
+    public void CopyDirectory(DirectoryInfo source, DirectoryInfo target);
 }
