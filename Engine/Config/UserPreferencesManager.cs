@@ -1,17 +1,10 @@
 ﻿using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Engine.Config;
 
 public class UserPreferencesManager
 {
-    private readonly string _jsonContent;
-    private readonly JsonElement _preferences;
-
-    public UserPreferencesManager()
-    {
-        _jsonContent = File.ReadAllText("user_preferences.json");
-    }
+    private readonly string _jsonContent = File.ReadAllText("user_preferences.json");
 
     public string[] GetQuickAccessLocations()
     {
@@ -19,5 +12,41 @@ public class UserPreferencesManager
         var root = doc.RootElement;
         var property = root.GetProperty("QuickAccess");
         return property.EnumerateArray().Select(prop => prop.ToString()).ToArray();
+    }
+
+    public void AddNewQuickAccessLocation(string location)
+    {
+        using JsonDocument doc = JsonDocument.Parse(_jsonContent);
+        var quickAccessList = doc.RootElement.GetProperty("QuickAccess").EnumerateArray().Select(item => item.GetString() ?? string.Empty).ToList();
+
+        quickAccessList.Add(location);
+
+        using var stream = new MemoryStream();
+        using (var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }))
+        {
+            writer.WriteStartObject();
+
+            writer.WritePropertyName("QuickAccess");
+            writer.WriteStartArray();
+            foreach (var item in quickAccessList)
+            {
+                writer.WriteStringValue(item);
+            }
+
+            writer.WriteEndArray();
+
+            foreach (var property in doc.RootElement.EnumerateObject())
+            {
+                if (property.Name != "QuickAccess")
+                {
+                    property.WriteTo(writer);
+                }
+            }
+
+            writer.WriteEndObject();
+        }
+
+        byte[] jsonBytes = stream.ToArray();
+        File.WriteAllBytes("user_preferences.json", jsonBytes);
     }
 }

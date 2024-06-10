@@ -5,9 +5,4 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <ContextMenu.ItemContainerStyle>
-        <Style TargetType="MenuItem">
-            <EventSetter Event="Click" Handler="Location_Click" />
-        </Style>
-    </ContextMenu.ItemContainerStyle>
 </ContextMenu>
