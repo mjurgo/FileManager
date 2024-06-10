@@ -3,6 +3,7 @@ using System.IO;
 using Engine;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using Engine.Config;
@@ -93,6 +94,19 @@ namespace FileManager
                     GetPaneToHandle(sender).GoDirBack();
                 }
 
+                if (Keyboard.IsKeyDown(Key.Q))
+                {
+                    var pane = GetPaneToHandle(sender);
+                    QuickAccessMenu qa = new QuickAccessMenu
+                    {
+                        IsOpen = true,
+                        PlacementTarget = pane.GetGrid(),
+                        Placement = PlacementMode.Relative,
+                        HorizontalOffset = 0,
+                        VerticalOffset = 0,
+                    };
+                }
+
                 if (Keyboard.IsKeyDown(Key.F))
                 {
                     var pane = GetPaneToHandle(sender);
@@ -117,6 +131,7 @@ namespace FileManager
                                 Directory.Move(item.Path, @$"{pane.GetCurrentPath()}\{item.Name}");
                             }
                         }
+
                         _itemsToCut.Clear();
                     }
                     else
@@ -135,6 +150,7 @@ namespace FileManager
                             }
                         }
                     }
+
                     pane.Refresh();
                 }
                 else
@@ -310,6 +326,16 @@ namespace FileManager
         public void ClearFilesToCopy()
         {
             _itemsToCopy.Clear();
+        }
+
+        public AppPane GetLeftPane()
+        {
+            return _leftPane;
+        }
+
+        public AppPane GetRightPane()
+        {
+            return _rightPane;
         }
     }
 }

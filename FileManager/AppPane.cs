@@ -44,6 +44,19 @@ public class AppPane
         }
     }
 
+    public void OpenPath(string path)
+    {
+        Content = _fileService.ListDir(path);
+        _assignedGrid.ItemsSource = Content;
+        if (_currentDirIndex < _viewHistory.Count - 1)
+        {
+            _viewHistory.RemoveRange(_currentDirIndex + 1, _viewHistory.Count - _currentDirIndex - 1);
+        }
+        _viewHistory.Add(_fileService.GetFileSystemEntryFromDirPath(path));
+        _currentDirIndex++;
+        Refresh();
+    }
+
     private void OpenDirectory(IFileSystemEntry item)
     {
         Content = (new FileService()).ListDir(item.Path);
