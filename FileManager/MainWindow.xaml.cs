@@ -153,51 +153,65 @@ namespace FileManager
 
                     pane.Refresh();
                 }
-                else
+            }
+            else
+            {
+                if (e.Key == Key.Enter)
                 {
-                    if (e.Key == Key.Enter)
+                    GetPaneToHandle(sender).OpenItem(sender);
+                }
+                else if (e.Key == Key.Delete)
+                {
+                    var pane = GetPaneToHandle(sender);
+                    var selectedItems = pane.GetGrid().SelectedItems;
+                    var msg = selectedItems.Count > 1
+                        ? $"Are you sure you want to delete multiple items ({selectedItems.Count})?"
+                        : "Are you sure you want to delete this item?";
+
+                    var confirmed = MessageBox.Show(
+                        msg,
+                        "Confirmation",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
+                    if (confirmed == MessageBoxResult.Yes)
                     {
-                        GetPaneToHandle(sender).OpenItem(sender);
+                        foreach (IFileSystemEntry entry in selectedItems)
+                        {
+                            pane.DeleteEntry(entry);
+                        }
+
+                        pane.Refresh();
                     }
-                    else if (e.Key == Key.Delete)
+                }
+                else if (e.Key == Key.F1)
+                {
+                    var pane = GetPaneToHandle(sender);
+                    var grid = pane.GetGrid();
+                    IFileSystemEntry entry = (IFileSystemEntry)grid.SelectedItem;
+                    if (entry == null)
                     {
+                        return;
+                    }
+
+                    EntryPropertiesWindow propertiesWindow =
+                        new EntryPropertiesWindow(entry);
+                    propertiesWindow.Show();
+                }
+                else if (e.Key == Key.F2)
+                {
+                    InputDialogWindow inputWindow = new InputDialogWindow("Enter a new name for the item");
+                    inputWindow.Owner = this;
+                    if (inputWindow.ShowDialog() == true)
+                    {
+                        string input = inputWindow.InputText;
                         var pane = GetPaneToHandle(sender);
-                        var selectedItems = pane.GetGrid().SelectedItems;
-                        var msg = selectedItems.Count > 1
-                            ? $"Are you sure you want to delete multiple items ({selectedItems.Count})?"
-                            : "Are you sure you want to delete this item?";
-
-                        var confirmed = MessageBox.Show(
-                            msg,
-                            "Confirmation",
-                            MessageBoxButton.YesNo,
-                            MessageBoxImage.Question);
-                        if (confirmed == MessageBoxResult.Yes)
-                        {
-                            foreach (IFileSystemEntry entry in selectedItems)
-                            {
-                                pane.DeleteEntry(entry);
-                            }
-
-                            pane.Refresh();
-                        }
+                        pane.RenameEntry(sender, input);
+                        pane.Refresh();
                     }
-                    else if (e.Key == Key.F2)
-                    {
-                        InputDialogWindow inputWindow = new InputDialogWindow("Enter a new name for the item");
-                        inputWindow.Owner = this;
-                        if (inputWindow.ShowDialog() == true)
-                        {
-                            string input = inputWindow.InputText;
-                            var pane = GetPaneToHandle(sender);
-                            pane.RenameEntry(sender, input);
-                            pane.Refresh();
-                        }
-                    }
-                    else if (e.Key == Key.F3)
-                    {
-                        GetPaneToHandle(sender).OpenItemInternally(sender);
-                    }
+                }
+                else if (e.Key == Key.F3)
+                {
+                    GetPaneToHandle(sender).OpenItemInternally(sender);
                 }
             }
         }

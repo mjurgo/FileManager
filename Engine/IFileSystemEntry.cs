@@ -14,6 +14,8 @@
         public string? Extension { get; }
         public EntryType Type { get; }
         public DateTime Modified { get; }
+        public DateTime Created { get; }
+        public long? Size { get; }
 
         public void Open();
     }

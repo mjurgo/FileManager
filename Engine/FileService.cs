@@ -27,7 +27,7 @@ namespace Engine
             {
                 fileSystemEntries.Add(
                     new AppDirectory(
-                        dir.FullName, dir.Name, dir.LastWriteTime
+                        dir.FullName, dir.Name, dir.LastWriteTime, dir.CreationTime
                     )
                 );
             }
@@ -36,7 +36,8 @@ namespace Engine
             {
                 fileSystemEntries.Add(
                     new AppFile(
-                        file.FullName, file.Name, file.LastWriteTime, file.Extension
+                        file.FullName, file.Name, file.LastWriteTime, file.CreationTime, file.Extension,
+                        (new FileInfo(file.FullName)).Length
                     )
                 );
             }
@@ -48,7 +49,7 @@ namespace Engine
         {
             DirectoryInfo di = new DirectoryInfo(path);
             return new AppDirectory(
-                di.FullName, di.Name, di.LastWriteTime
+                di.FullName, di.Name, di.LastWriteTime, di.CreationTime
             );
         }
 
@@ -113,14 +114,15 @@ namespace Engine
                 {
                     entries.Add(
                         new AppDirectory(
-                            item.FullName, item.FullName, item.LastWriteTime
+                            item.FullName, item.FullName, item.LastWriteTime, item.CreationTime
                         ));
                 }
                 else if (item is FileInfo)
                 {
                     entries.Add(
                         new AppFile(
-                            item.FullName, item.FullName, item.LastWriteTime, item.Extension
+                            item.FullName, item.FullName, item.LastWriteTime, item.CreationTime, item.Extension,
+                            (new FileInfo(item.FullName)).Length
                         )
                     );
                 }
@@ -131,7 +133,7 @@ namespace Engine
 
         public IFileSystemEntry CreateSearchResultEntry(string path)
         {
-            return new AppSearchResult(path, path, DateTime.Now);
+            return new AppSearchResult(path, path, DateTime.Now, DateTime.Now);
         }
 
         public void CopyDirectory(DirectoryInfo source, DirectoryInfo target)
@@ -149,6 +151,24 @@ namespace Engine
                     target.CreateSubdirectory(diSourceSubDir.Name);
                 CopyDirectory(diSourceSubDir, nextTargetSubDir);
             }
+        }
+
+        public long GetDirectorySize(DirectoryInfo dir)
+        {
+            long size = 0;
+            FileInfo[] fis = dir.GetFiles();
+            foreach (FileInfo fi in fis)
+            {
+                size += fi.Length;
+            }
+
+            DirectoryInfo[] dis = dir.GetDirectories();
+            foreach (DirectoryInfo di in dis)
+            {
+                size += GetDirectorySize(di);
+            }
+
+            return size;
         }
     }
 }
