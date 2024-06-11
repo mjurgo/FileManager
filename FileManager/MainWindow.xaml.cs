@@ -107,6 +107,18 @@ namespace FileManager
                     Process.Start("explorer.exe", entry.Path);
                 }
 
+                if (Keyboard.IsKeyDown(Key.T))
+                {
+                    var pane = GetPaneToHandle(sender);
+                    var path = pane.GetCurrentPath();
+                    var processStartInfo = new ProcessStartInfo
+                    {
+                        FileName = "cmd.exe",
+                        WorkingDirectory = path
+                    };
+                    Process.Start(processStartInfo);
+                }
+
                 if (Keyboard.IsKeyDown(Key.Q))
                 {
                     var pane = GetPaneToHandle(sender);
