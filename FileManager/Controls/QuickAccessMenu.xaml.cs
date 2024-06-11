@@ -11,7 +11,6 @@ public partial class QuickAccessMenu
     public QuickAccessMenu()
     {
         _userPreferencesManager = new UserPreferencesManager();
-        _userPreferencesManager.GetQuickAccessLocations();
 
         UpdateMenuItems();
 
@@ -47,6 +46,12 @@ public partial class QuickAccessMenu
         }
     }
 
+    private void Config_Click(object sender, RoutedEventArgs e)
+    {
+        var configWindow = new QuickAccessMenuConfigWindow();
+        configWindow.Show();
+    }
+
     private void UpdateMenuItems()
     {
         Items.Clear();
@@ -67,5 +72,13 @@ public partial class QuickAccessMenu
         };
         addNew.Click += AddLocation_Click;
         Items.Add(addNew);
+        
+        
+        var configItem = new MenuItem
+        {
+            Header = "@ Configuration...",
+        };
+        configItem.Click += Config_Click;
+        Items.Add(configItem);
     }
 }
