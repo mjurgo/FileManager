@@ -94,6 +94,19 @@ namespace FileManager
                     GetPaneToHandle(sender).GoDirBack();
                 }
 
+                if (Keyboard.IsKeyDown(Key.E))
+                {
+                    var pane = GetPaneToHandle(sender);
+                    var grid = pane.GetGrid();
+                    IFileSystemEntry entry = (IFileSystemEntry)grid.SelectedItem;
+                    if (entry.Type != EntryType.Directory)
+                    {
+                        return;
+                    }
+
+                    Process.Start("explorer.exe", entry.Path);
+                }
+
                 if (Keyboard.IsKeyDown(Key.Q))
                 {
                     var pane = GetPaneToHandle(sender);
