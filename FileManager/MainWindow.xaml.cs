@@ -7,6 +7,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using Engine.Config;
+using Engine.Dropbox;
 using FileManager.Controls;
 
 namespace FileManager
@@ -17,6 +18,7 @@ namespace FileManager
         private readonly AppPane _rightPane;
         private readonly ConfigManager _configManager;
         private readonly IFileService _fileService;
+        private readonly DropboxManager _dropboxManager;
 
         private readonly List<IFileSystemEntry> _itemsToCut = [];
         private readonly List<IFileSystemEntry> _itemsToCopy = [];
@@ -27,6 +29,7 @@ namespace FileManager
 
             _configManager = new ConfigManager();
             _fileService = new FileService();
+            _dropboxManager = new DropboxManager();
 
             AppTheme.ChangeTheme(_configManager.GetCurrentTheme());
 
@@ -117,6 +120,32 @@ namespace FileManager
                         WorkingDirectory = path
                     };
                     Process.Start(processStartInfo);
+                }
+
+                if (Keyboard.IsKeyDown(Key.U))
+                {
+                    var pane = GetPaneToHandle(sender);
+                    var grid = pane.GetGrid();
+                    IFileSystemEntry entry = (IFileSystemEntry)grid.SelectedItem;
+                    if (entry.Type != EntryType.File)
+                    {
+                        return;
+                    }
+
+                    if (!_dropboxManager.UploadFile(entry.Path, entry.Name))
+                    {
+                        MessageBox.Show("Couldn't upload file.", "Upload failed", MessageBoxButton.OK,
+                            MessageBoxImage.Error);
+                        return;
+                    }
+
+                    MessageBox.Show("File uploaded successfully.", "Upload successful", MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }
+
+                if (Keyboard.IsKeyDown(Key.P))
+                {
+                    _dropboxManager.Auth();
                 }
 
                 if (Keyboard.IsKeyDown(Key.Q))
