@@ -170,5 +170,21 @@ namespace Engine
 
             return size;
         }
+
+        public void UnzipFile(IFileSystemEntry file, string targetPath)
+        {
+            var finalPath = file.Path.Replace(file.Name, targetPath);
+            System.IO.Compression.ZipFile.ExtractToDirectory(file.Path, finalPath);
+        }
+        
+        public void ZipDirectory(IFileSystemEntry directory, string targetFile, string currentPath)
+        {
+            var finalPath = @$"{currentPath}/{targetFile}";
+            if (!finalPath.EndsWith(".zip"))
+            {
+                finalPath += ".zip";
+            }
+            System.IO.Compression.ZipFile.CreateFromDirectory(directory.Path, finalPath);
+        }
     }
 }

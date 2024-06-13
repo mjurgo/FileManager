@@ -21,6 +21,9 @@
             <ColumnDefinition Name="RightPane" Width="*" />
         </Grid.ColumnDefinitions>
         <Menu Grid.ColumnSpan="2">
+            <MenuItem Header="File">
+                <MenuItem Header="Exit" Click="ExitApplication" />
+            </MenuItem>
             <MenuItem Header="Configuration">
                 <MenuItem Header="Edit config" Click="MenuConfiguration_Click" />
             </MenuItem>
@@ -30,6 +33,12 @@
                 <Image Source="Resources/upload_icon.png" />
             </Button>
             <Button Height="25" Padding="3, 3, 3, 3" ToolTip="Auth in Dropbox" Click="AuthButton_OnClick">Auth</Button>
+            <Button Height="25" Width="25" Padding="3, 3, 3, 3" ToolTip="Unzip" Click="UnzipButton_OnClick">
+                <Image Source="Resources/unzip_icon.png" />
+            </Button>
+            <Button Height="25" Width="25" Padding="3, 3, 3, 3" ToolTip="Zip" Click="ZipButton_OnClick">
+                <Image Source="Resources/zip_icon.png" />
+            </Button>
         </StackPanel>
         <Button Name="LeftPaneGoBackButton" Grid.Row="2" Grid.Column="0" Width="56" Height="auto"
                 HorizontalAlignment="Left" Margin="0,0,0,20" Click="GoBackButton_Click">

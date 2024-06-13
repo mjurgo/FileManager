@@ -14,4 +14,6 @@ public interface IFileService
     public IFileSystemEntry CreateSearchResultEntry(string path);
     public void CopyDirectory(DirectoryInfo source, DirectoryInfo target);
     public long GetDirectorySize(DirectoryInfo dir);
+    public void UnzipFile(IFileSystemEntry file, string targetPath);
+    public void ZipDirectory(IFileSystemEntry directory, string targetFile, string currentPath);
 }

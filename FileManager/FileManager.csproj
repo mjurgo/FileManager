@@ -29,6 +29,14 @@
     <Content Include=".env">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Remove="Resources\unzip_icon.png" />
+    <Content Include="Resources\unzip_icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Resources\zip_icon.png" />
+    <Content Include="Resources\zip_icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   
   <ItemGroup>
@@ -46,6 +54,7 @@
   
   <ItemGroup>
     <PackageReference Include="Dropbox.Api" Version="7.0.0" />
+    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
   </ItemGroup>
   

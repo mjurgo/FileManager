@@ -442,5 +442,85 @@ namespace FileManager
         {
             _dropboxManager.Auth();
         }
+
+        private void ExitApplication(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void UnzipButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (_lastFocusedDataGrid == null)
+            {
+                MessageBox.Show("Couldn't retrieve selected item.", "Error", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
+            }
+
+            IFileSystemEntry entry = (IFileSystemEntry)_lastFocusedDataGrid.SelectedItem;
+            if (entry.Type != EntryType.File || entry.Extension != ".zip")
+            {
+                MessageBox.Show("Cannot unzip file that isn't a zip.", "Can't unzip", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
+            }
+
+            var inputWindow = new InputDialogWindow("Enter the name of target directory")
+            {
+                Owner = this
+            };
+            if (inputWindow.ShowDialog() != true) return;
+            var input = inputWindow.InputText;
+            if (input == string.Empty)
+            {
+                input = entry.Name.Replace(".zip", "");
+            }
+
+            _fileService.UnzipFile(entry, input);
+            GetPaneByGrid(_lastFocusedDataGrid).Refresh();
+        }
+
+        private AppPane GetPaneByGrid(DataGrid grid)
+        {
+            if (grid.Name == "LeftPaneData")
+            {
+                return _leftPane;
+            }
+
+            return _rightPane;
+        }
+
+        private void ZipButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (_lastFocusedDataGrid == null)
+            {
+                MessageBox.Show("Couldn't retrieve selected item.", "Error", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
+            }
+
+            IFileSystemEntry entry = (IFileSystemEntry)_lastFocusedDataGrid.SelectedItem;
+            if (entry.Type != EntryType.Directory)
+            {
+                MessageBox.Show("Must be a directory", "Can't compress", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
+            }
+
+            var inputWindow = new InputDialogWindow("Enter the name of target file")
+            {
+                Owner = this
+            };
+            if (inputWindow.ShowDialog() != true) return;
+            var input = inputWindow.InputText;
+            if (input == string.Empty)
+            {
+                input = entry.Name;
+            }
+
+            var pane = GetPaneByGrid(_lastFocusedDataGrid);
+            _fileService.ZipDirectory(entry, input, pane.GetCurrentPath());
+            pane.Refresh();
+        }
     }
 }
