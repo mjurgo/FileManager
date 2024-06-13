@@ -48,5 +48,12 @@
     <PackageReference Include="Dropbox.Api" Version="7.0.0" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <None Remove="Resources\upload_icon.png" />
+    <Content Include="Resources\upload_icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
 </Project>

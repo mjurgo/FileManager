@@ -5,9 +5,13 @@ namespace Engine.Config;
 
 public class Option
 {
+    [JsonPropertyName("name")]
     public string Name { get; set; }
+    [JsonPropertyName("value")]
     public string Value { get; set; }
+    [JsonPropertyName("type")]
     public OptionType Type { get; set; }
+    [JsonPropertyName("possibleValues")]
     public List<string> PossibleValues { get; set; }
 }
 

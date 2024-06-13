@@ -28,6 +28,10 @@ public class DropboxManager
         {
             Task.Run(async () => await Upload(filePath, fileName)).Wait();
         }
+        catch (AuthException)
+        {
+            return false;
+        }
         catch (DropboxException)
         {
             // TODO: Add error log
