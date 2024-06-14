@@ -522,5 +522,19 @@ namespace FileManager
             _fileService.ZipDirectory(entry, input, pane.GetCurrentPath());
             pane.Refresh();
         }
+
+        private void CreateFolderButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            InputDialogWindow inputWindow = new InputDialogWindow("Enter the name for new directory");
+            inputWindow.Owner = this;
+            if (inputWindow.ShowDialog() == true)
+            {
+                string input = inputWindow.InputText;
+                if (_lastFocusedDataGrid == null) return;
+                var pane = GetPaneByGrid(_lastFocusedDataGrid);
+                pane.CreateDirectory(input);
+                pane.Refresh();
+            }
+        }
     }
 }

@@ -40,6 +40,9 @@
             <Button Height="25" Width="25" Padding="3, 3, 3, 3" ToolTip="Zip" Click="ZipButton_OnClick">
                 <Image Source="Resources/zip_icon.png" />
             </Button>
+            <Button Height="25" Width="25" Padding="3, 3, 3, 3" ToolTip="Create folder" Click="CreateFolderButton_OnClick">
+                <Image Source="Resources/folder_icon.png" />
+            </Button>
         </StackPanel>
         <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
             <Button Name="LeftPaneGoBackButton" Width="56" Height="20"
