@@ -89,6 +89,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
                 <DataGridTextColumn Header="Modified" Binding="{Binding Modified}" />
+                <DataGridTextColumn Header="Size (bytes)" Binding="{Binding Size}" />
             </DataGrid.Columns>
         </DataGrid>
         <appControls:PaneSearchBox x:Name="LeftPaneSearch" Grid.Row="5" Grid.Column="0" KeyDown="PaneSearch_OnKeyDown" />
@@ -116,6 +117,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
                 <DataGridTextColumn Header="Modified" Binding="{Binding Modified}" />
+                <DataGridTextColumn Header="Size (bytes)" Binding="{Binding Size}" />
             </DataGrid.Columns>
         </DataGrid>
         <appControls:PaneSearchBox x:Name="RightPaneSearch" Grid.Row="5" Grid.Column="1" KeyDown="PaneSearch_OnKeyDown" />
