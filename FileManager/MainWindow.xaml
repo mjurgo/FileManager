@@ -13,6 +13,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
@@ -20,7 +21,7 @@
             <ColumnDefinition Name="LeftPane" Width="*" />
             <ColumnDefinition Name="RightPane" Width="*" />
         </Grid.ColumnDefinitions>
-        <Menu Grid.ColumnSpan="2">
+        <Menu Grid.Row="0" Grid.ColumnSpan="2">
             <MenuItem Header="File">
                 <MenuItem Header="Exit" Click="ExitApplication" />
             </MenuItem>
@@ -40,28 +41,35 @@
                 <Image Source="Resources/zip_icon.png" />
             </Button>
         </StackPanel>
-        <Button Name="LeftPaneGoBackButton" Grid.Row="2" Grid.Column="0" Width="56" Height="auto"
-                HorizontalAlignment="Left" Margin="0,0,0,20" Click="GoBackButton_Click">
-            <TextBlock Text="&#x27F5;" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" />
-        </Button>
-        <Button Name="RightPaneGoBackButton" Grid.Row="2" Grid.Column="1" Width="56" HorizontalAlignment="Left"
-                Margin="0,0,0,20" Click="GoBackButton_Click">
-            <TextBlock Text="&#x27F5;" VerticalAlignment="Bottom" Width="23" Height="16" HorizontalAlignment="Center" />
-        </Button>
-        <Button Name="LeftPaneGoForwardButton" Grid.Row="2" Grid.Column="0" Content="&#x27F6;" Width="56" Height="auto"
-                HorizontalAlignment="Left"
-                Margin="56,0,0,20" FontWeight="Bold" Click="GoForwardButton_Click" />
-        <Button Name="RightPaneGoForwardButton" Grid.Row="2" Grid.Column="1" Content="&#x27F6;" Width="56"
-                HorizontalAlignment="Left"
-                Margin="56,0,0,20" FontWeight="Bold" Click="GoForwardButton_Click" />
+        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
+            <Button Name="LeftPaneGoBackButton" Width="56" Height="20"
+                    Click="GoBackButton_Click">
+                <TextBlock Text="&#x27F5;" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" />
+            </Button>
+            <Button Name="LeftPaneGoForwardButton" Content="&#x27F6;" Width="56"
+                    Height="20"
+                    FontWeight="Bold" Click="GoForwardButton_Click" />
+        </StackPanel>
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+            <Button Name="RightPaneGoBackButton" Width="56" Height="20"
+                    Click="GoBackButton_Click">
+                <TextBlock Text="&#x27F5;" VerticalAlignment="Bottom" Width="23" Height="16"
+                           HorizontalAlignment="Center" />
+            </Button>
+            <Button Name="RightPaneGoForwardButton" Content="&#x27F6;" Width="56"
+                    Height="20"
+                    FontWeight="Bold" Click="GoForwardButton_Click" />
+        </StackPanel>
+        <appControls:PanePathBox x:Name="LeftPanePath" Grid.Row="3" Grid.Column="0" />
+        <appControls:PanePathBox x:Name="RightPanePath" Grid.Row="3" Grid.Column="1" />
         <DataGrid Name="LeftPaneData"
                   GotFocus="DataGrid_OnGotFocus"
-                  Grid.Row="2"
+                  Grid.Row="4"
                   Grid.Column="0"
                   AutoGenerateColumns="False"
                   SelectionUnit="FullRow"
                   ColumnWidth="*"
-                  IsReadOnly="True" Margin="0,20,0,0" Grid.RowSpan="2">
+                  IsReadOnly="True" Margin="0,0,0,0" Grid.RowSpan="2">
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
                     <Setter Property="Background" Value="{DynamicResource row}" />
@@ -80,15 +88,15 @@
                 <DataGridTextColumn Header="Modified" Binding="{Binding Modified}" />
             </DataGrid.Columns>
         </DataGrid>
-        <appControls:PaneSearchBox x:Name="LeftPaneSearch" Grid.Row="4" Grid.Column="0" KeyDown="PaneSearch_OnKeyDown" />
+        <appControls:PaneSearchBox x:Name="LeftPaneSearch" Grid.Row="5" Grid.Column="0" KeyDown="PaneSearch_OnKeyDown" />
         <DataGrid Name="RightPaneData"
                   GotFocus="DataGrid_OnGotFocus"
-                  Grid.Row="2"
+                  Grid.Row="4"
                   Grid.Column="1"
                   AutoGenerateColumns="False"
                   SelectionUnit="FullRow"
                   ColumnWidth="*"
-                  IsReadOnly="True" Margin="0,20,0,0" Grid.RowSpan="2">
+                  IsReadOnly="True" Margin="0,0,0,0" Grid.RowSpan="2">
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
                     <Setter Property="Background" Value="{DynamicResource row}" />
@@ -107,6 +115,6 @@
                 <DataGridTextColumn Header="Modified" Binding="{Binding Modified}" />
             </DataGrid.Columns>
         </DataGrid>
-        <appControls:PaneSearchBox x:Name="RightPaneSearch" Grid.Row="4" Grid.Column="1" KeyDown="PaneSearch_OnKeyDown" />
+        <appControls:PaneSearchBox x:Name="RightPaneSearch" Grid.Row="5" Grid.Column="1" KeyDown="PaneSearch_OnKeyDown" />
     </Grid>
 </Window>

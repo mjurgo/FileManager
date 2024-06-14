@@ -34,8 +34,8 @@ namespace FileManager
 
             AppTheme.ChangeTheme(_configManager.GetCurrentTheme());
 
-            _leftPane = new AppPane(_configManager.GetLeftPaneDefaultLocation(), LeftPaneData);
-            _rightPane = new AppPane(_configManager.GetRightPaneDefaultLocation(), RightPaneData);
+            _leftPane = new AppPane(_configManager.GetLeftPaneDefaultLocation(), LeftPaneData, LeftPanePath);
+            _rightPane = new AppPane(_configManager.GetRightPaneDefaultLocation(), RightPaneData, RightPanePath);
 
             LeftPaneData.ItemsSource = _leftPane.Content;
             RightPaneData.ItemsSource = _rightPane.Content;

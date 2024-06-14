@@ -3,6 +3,7 @@ using System.IO;
 using System.Security.Policy;
 using System.Windows.Controls;
 using Engine;
+using FileManager.Controls;
 
 namespace FileManager;
 
@@ -11,16 +12,19 @@ public class AppPane
     public List<IFileSystemEntry> Content { get; private set; }
 
     private readonly DataGrid _assignedGrid;
+    private readonly PanePathBox _pathBox;
 
     private readonly IFileService _fileService = new FileService();
     private readonly List<IFileSystemEntry> _viewHistory = [];
     private int _currentDirIndex;
 
-    public AppPane(string path, DataGrid assignedGrid)
+    public AppPane(string path, DataGrid assignedGrid, PanePathBox pathBox)
     {
         _assignedGrid = assignedGrid;
+        _pathBox = pathBox;
         Content = _fileService.ListDir(path);
         _viewHistory.Add(_fileService.GetFileSystemEntryFromDirPath(path));
+        _pathBox.SetPath(GetCurrentPath());
     }
 
     public void OpenItem(object sender)
@@ -68,7 +72,7 @@ public class AppPane
 
         _viewHistory.Add(item);
         _currentDirIndex++;
-        FocusOnFirstItem();
+        Refresh();
     }
 
     private void OpenFile(IFileSystemEntry item)
@@ -96,6 +100,7 @@ public class AppPane
             Content = _fileService.ListDir(_viewHistory[_currentDirIndex + 1].Path);
             _currentDirIndex++;
             _assignedGrid.ItemsSource = Content;
+            _pathBox.SetPath(GetCurrentPath());
         }
     }
 
@@ -110,6 +115,7 @@ public class AppPane
             Content = _fileService.ListDir(_viewHistory[_currentDirIndex - 1].Path);
             _currentDirIndex--;
             _assignedGrid.ItemsSource = Content;
+            _pathBox.SetPath(GetCurrentPath());
         }
     }
 
@@ -145,6 +151,7 @@ public class AppPane
     public void Refresh()
     {
         _assignedGrid.ItemsSource = _fileService.ListDir(_viewHistory[_currentDirIndex].Path);
+        _pathBox.SetPath(GetCurrentPath());
         FocusOnFirstItem();
     }
 
