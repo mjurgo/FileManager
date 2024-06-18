@@ -21,47 +21,24 @@ public partial class ItemContextMenu : ContextMenu
 
     private void Rename_OnClick(object sender, RoutedEventArgs e)
     {
-        ContextMenu contextMenu = (ContextMenu)((MenuItem)sender).Parent;
-        DataGridRow row = (DataGridRow)contextMenu.PlacementTarget;
+        var contextMenu = (ContextMenu)((MenuItem)sender).Parent;
+        var row = (DataGridRow)contextMenu.PlacementTarget;
         var currentMainWindow = Application.Current.MainWindow as MainWindow;
-
-        InputDialogWindow inputWindow = new InputDialogWindow("Enter a new name for the item");
-        if (inputWindow.ShowDialog() == true)
-        {
-            string input = inputWindow.InputText;
-            var pane = currentMainWindow.GetPaneToHandle(row);
-            pane.RenameEntry(row, input);
-            pane.Refresh();
-        }
+        var pane = currentMainWindow.GetPaneToHandle(row);
+        
+        ActionHandler.RenameEntryAction(pane, row, currentMainWindow);
     }
 
     private void Delete_OnClick(object sender, RoutedEventArgs e)
     {
-        ContextMenu contextMenu = (ContextMenu)((MenuItem)sender).Parent;
-        DataGridRow row = (DataGridRow)contextMenu.PlacementTarget;
+        var contextMenu = (ContextMenu)((MenuItem)sender).Parent;
+        var row = (DataGridRow)contextMenu.PlacementTarget;
         var currentMainWindow = Application.Current.MainWindow as MainWindow;
 
         var selectedItems = currentMainWindow.GetPaneToHandle(row).GetGrid().SelectedItems;
+        var pane = currentMainWindow.GetPaneToHandle(row);
 
-        var msg = selectedItems.Count > 1
-            ? $"Are you sure you want to delete multiple items ({selectedItems.Count})?"
-            : "Are you sure you want to delete this item?";
-
-        var confirmed = MessageBox.Show(
-            msg,
-            "Confirmation",
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Question);
-        if (confirmed == MessageBoxResult.Yes)
-        {
-            var pane = currentMainWindow.GetPaneToHandle(row);
-            foreach (IFileSystemEntry entry in selectedItems)
-            {
-                pane.DeleteEntry(entry);
-            }
-
-            pane.Refresh();
-        }
+        ActionHandler.DeleteEntriesAction(pane, selectedItems);
     }
 
     private void Cut_OnClick(object sender, RoutedEventArgs e)
@@ -76,6 +53,7 @@ public partial class ItemContextMenu : ContextMenu
         {
             currentMainWindow.AddItemToCut(entry);
         }
+
         currentMainWindow.ClearFilesToCopy();
     }
 
@@ -91,6 +69,7 @@ public partial class ItemContextMenu : ContextMenu
         {
             currentMainWindow.AddItemToCopy(entry);
         }
+
         currentMainWindow.ClearFilesToCut();
     }
 }

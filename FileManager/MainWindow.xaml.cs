@@ -12,7 +12,7 @@ using FileManager.Controls;
 
 namespace FileManager
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         private readonly AppPane _leftPane;
         private readonly AppPane _rightPane;
@@ -45,8 +45,7 @@ namespace FileManager
 
         private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var paneToHandle = GetPaneToHandle(sender);
-            paneToHandle.OpenItem(sender);
+            GetPaneToHandle(sender).OpenItem(sender);
         }
 
         private void Row_KeyDown(object sender, KeyEventArgs e)
@@ -54,219 +53,152 @@ namespace FileManager
             if ((Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) ==
                 (ModifierKeys.Control | ModifierKeys.Shift))
             {
-                if (Keyboard.IsKeyDown(Key.N))
-                {
-                    InputDialogWindow inputWindow = new InputDialogWindow("Enter the name for new directory");
-                    inputWindow.Owner = this;
-                    if (inputWindow.ShowDialog() == true)
-                    {
-                        string input = inputWindow.InputText;
-                        var pane = GetPaneToHandle(sender);
-                        pane.CreateDirectory(input);
-                        pane.Refresh();
-                    }
-                }
-
-                if (Keyboard.IsKeyDown(Key.F))
-                {
-                    InputDialogWindow inputWindow = new InputDialogWindow("Enter name of the file to search for:");
-                    inputWindow.Owner = this;
-                    inputWindow.Title = "Find file";
-                    if (inputWindow.ShowDialog() == true)
-                    {
-                        string input = inputWindow.InputText;
-                        var pane = GetPaneToHandle(sender);
-                        bool found = pane.FindItem(input);
-                        if (!found)
-                        {
-                            MessageBox.Show("Item not found in current and nested directories.", "Not found",
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Exclamation);
-                        }
-                    }
-                }
+                HandleDoubleModifiersShortcuts(sender);
             }
             else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
-                if (Keyboard.IsKeyDown(Key.OemPeriod))
-                {
-                    GetPaneToHandle(sender).GoDirForward();
-                }
-
-                if (Keyboard.IsKeyDown(Key.OemComma))
-                {
-                    GetPaneToHandle(sender).GoDirBack();
-                }
-
-                if (Keyboard.IsKeyDown(Key.E))
-                {
-                    var pane = GetPaneToHandle(sender);
-                    var grid = pane.GetGrid();
-                    IFileSystemEntry entry = (IFileSystemEntry)grid.SelectedItem;
-                    if (entry.Type != EntryType.Directory)
-                    {
-                        return;
-                    }
-
-                    Process.Start("explorer.exe", entry.Path);
-                }
-
-                if (Keyboard.IsKeyDown(Key.T))
-                {
-                    var pane = GetPaneToHandle(sender);
-                    var path = pane.GetCurrentPath();
-                    var processStartInfo = new ProcessStartInfo
-                    {
-                        FileName = "cmd.exe",
-                        WorkingDirectory = path
-                    };
-                    Process.Start(processStartInfo);
-                }
-
-                if (Keyboard.IsKeyDown(Key.U))
-                {
-                    var pane = GetPaneToHandle(sender);
-                    var grid = pane.GetGrid();
-                    IFileSystemEntry entry = (IFileSystemEntry)grid.SelectedItem;
-                    if (entry.Type != EntryType.File)
-                    {
-                        return;
-                    }
-
-                    if (!_dropboxManager.UploadFile(entry.Path, entry.Name))
-                    {
-                        MessageBox.Show("Couldn't upload file.", "Upload failed", MessageBoxButton.OK,
-                            MessageBoxImage.Error);
-                        return;
-                    }
-
-                    MessageBox.Show("File uploaded successfully.", "Upload successful", MessageBoxButton.OK,
-                        MessageBoxImage.Information);
-                }
-
-                if (Keyboard.IsKeyDown(Key.P))
-                {
-                    _dropboxManager.Auth();
-                }
-
-                if (Keyboard.IsKeyDown(Key.Q))
-                {
-                    var pane = GetPaneToHandle(sender);
-                    QuickAccessMenu qa = new QuickAccessMenu
-                    {
-                        IsOpen = true,
-                        PlacementTarget = pane.GetGrid(),
-                        Placement = PlacementMode.Relative,
-                        HorizontalOffset = 0,
-                        VerticalOffset = 0,
-                    };
-                }
-
-                if (Keyboard.IsKeyDown(Key.F))
-                {
-                    var pane = GetPaneToHandle(sender);
-                    Keyboard.Focus(pane.GetGridName() == "LeftPaneData"
-                        ? LeftPaneSearch.PaneSearchTextBox
-                        : RightPaneSearch.PaneSearchTextBox);
-                }
-
-                if (Keyboard.IsKeyDown(Key.V))
-                {
-                    var pane = GetPaneToHandle(sender);
-                    if (_itemsToCut.Count > 0)
-                    {
-                        foreach (IFileSystemEntry item in _itemsToCut)
-                        {
-                            if (item.Type == EntryType.File)
-                            {
-                                File.Move(item.Path, @$"{pane.GetCurrentPath()}\{item.Name}");
-                            }
-                            else if (item.Type == EntryType.Directory)
-                            {
-                                Directory.Move(item.Path, @$"{pane.GetCurrentPath()}\{item.Name}");
-                            }
-                        }
-
-                        _itemsToCut.Clear();
-                    }
-                    else
-                    {
-                        foreach (IFileSystemEntry item in _itemsToCopy)
-                        {
-                            if (item.Type == EntryType.File)
-                            {
-                                File.Copy(item.Path, @$"{pane.GetCurrentPath()}\{item.Name}");
-                            }
-                            else if (item.Type == EntryType.Directory)
-                            {
-                                var sourceDir = new DirectoryInfo(item.Path);
-                                var targetDir = new DirectoryInfo(@$"{pane.GetCurrentPath()}\{item.Name}");
-                                _fileService.CopyDirectory(sourceDir, targetDir);
-                            }
-                        }
-                    }
-
-                    pane.Refresh();
-                }
+                HandleSingleModifierShortcuts(sender);
             }
             else
             {
-                if (e.Key == Key.Enter)
+                HandleSingleKeyShortcuts(sender, e);
+            }
+        }
+
+        private void HandleSingleKeyShortcuts(object sender, KeyEventArgs e)
+        {
+            var pane = GetPaneToHandle(sender);
+            var grid = pane.GetGrid();
+
+            if (e.Key == Key.Enter)
+            {
+                pane.OpenItem(sender);
+            }
+            else if (e.Key == Key.Delete)
+            {
+                ActionHandler.DeleteEntriesAction(pane, grid.SelectedItems);
+            }
+            else if (e.Key == Key.F1)
+            {
+                IFileSystemEntry entry = (IFileSystemEntry)grid.SelectedItem;
+                if (entry == null)
                 {
-                    GetPaneToHandle(sender).OpenItem(sender);
+                    return;
                 }
-                else if (e.Key == Key.Delete)
+
+                ActionHandler.OpenPropertiesAction(entry);
+            }
+            else if (e.Key == Key.F2)
+            {
+                ActionHandler.RenameEntryAction(pane, sender, this);
+            }
+            else if (e.Key == Key.F3)
+            {
+                pane.OpenItemInternally(sender);
+            }
+        }
+
+        private void HandleSingleModifierShortcuts(object sender)
+        {
+            var pane = GetPaneToHandle(sender);
+            var grid = pane.GetGrid();
+
+            if (Keyboard.IsKeyDown(Key.OemPeriod))
+            {
+                pane.GoDirForward();
+            }
+
+            if (Keyboard.IsKeyDown(Key.OemComma))
+            {
+                pane.GoDirBack();
+            }
+
+            if (Keyboard.IsKeyDown(Key.E))
+            {
+                ActionHandler.OpenEntryInExplorerAction((IFileSystemEntry)grid.SelectedItem);
+            }
+
+            if (Keyboard.IsKeyDown(Key.T))
+            {
+                ActionHandler.OpenTerminalAction(pane.GetCurrentPath());
+            }
+
+            if (Keyboard.IsKeyDown(Key.U))
+            {
+                ActionHandler.UploadEntryToDropboxAction((IFileSystemEntry)grid.SelectedItem);
+            }
+
+            if (Keyboard.IsKeyDown(Key.P))
+            {
+                _dropboxManager.Auth();
+            }
+
+            if (Keyboard.IsKeyDown(Key.Q))
+            {
+                var qa = new QuickAccessMenu
                 {
+                    IsOpen = true,
+                    PlacementTarget = pane.GetGrid(),
+                    Placement = PlacementMode.Relative,
+                    HorizontalOffset = 0,
+                    VerticalOffset = 0,
+                };
+            }
+
+            if (Keyboard.IsKeyDown(Key.F))
+            {
+                Keyboard.Focus(pane.GetGridName() == "LeftPaneData"
+                    ? LeftPaneSearch.PaneSearchTextBox
+                    : RightPaneSearch.PaneSearchTextBox);
+            }
+
+            if (Keyboard.IsKeyDown(Key.V))
+            {
+                if (_itemsToCut.Count > 0)
+                {
+                    ActionHandler.MoveEntries(_itemsToCut, pane);
+                    _itemsToCut.Clear();
+                }
+                else
+                {
+                    ActionHandler.CopyEntries(_itemsToCopy, pane);
+                }
+
+                pane.Refresh();
+            }
+        }
+
+        private void HandleDoubleModifiersShortcuts(object sender)
+        {
+            if (Keyboard.IsKeyDown(Key.N))
+            {
+                InputDialogWindow inputWindow = new InputDialogWindow("Enter the name for new directory");
+                inputWindow.Owner = this;
+                if (inputWindow.ShowDialog() == true)
+                {
+                    string input = inputWindow.InputText;
                     var pane = GetPaneToHandle(sender);
-                    var selectedItems = pane.GetGrid().SelectedItems;
-                    var msg = selectedItems.Count > 1
-                        ? $"Are you sure you want to delete multiple items ({selectedItems.Count})?"
-                        : "Are you sure you want to delete this item?";
-
-                    var confirmed = MessageBox.Show(
-                        msg,
-                        "Confirmation",
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Question);
-                    if (confirmed == MessageBoxResult.Yes)
-                    {
-                        foreach (IFileSystemEntry entry in selectedItems)
-                        {
-                            pane.DeleteEntry(entry);
-                        }
-
-                        pane.Refresh();
-                    }
+                    pane.CreateDirectory(input);
+                    pane.Refresh();
                 }
-                else if (e.Key == Key.F1)
+            }
+
+            if (Keyboard.IsKeyDown(Key.F))
+            {
+                InputDialogWindow inputWindow = new InputDialogWindow("Enter name of the file to search for:");
+                inputWindow.Owner = this;
+                inputWindow.Title = "Find file";
+                if (inputWindow.ShowDialog() == true)
                 {
+                    string input = inputWindow.InputText;
                     var pane = GetPaneToHandle(sender);
-                    var grid = pane.GetGrid();
-                    IFileSystemEntry entry = (IFileSystemEntry)grid.SelectedItem;
-                    if (entry == null)
+                    bool found = pane.FindItem(input);
+                    if (!found)
                     {
-                        return;
+                        MessageBox.Show("Item not found in current and nested directories.", "Not found",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Exclamation);
                     }
-
-                    EntryPropertiesWindow propertiesWindow =
-                        new EntryPropertiesWindow(entry);
-                    propertiesWindow.Show();
-                }
-                else if (e.Key == Key.F2)
-                {
-                    InputDialogWindow inputWindow = new InputDialogWindow("Enter a new name for the item");
-                    inputWindow.Owner = this;
-                    if (inputWindow.ShowDialog() == true)
-                    {
-                        string input = inputWindow.InputText;
-                        var pane = GetPaneToHandle(sender);
-                        pane.RenameEntry(sender, input);
-                        pane.Refresh();
-                    }
-                }
-                else if (e.Key == Key.F3)
-                {
-                    GetPaneToHandle(sender).OpenItemInternally(sender);
                 }
             }
         }
@@ -416,21 +348,7 @@ namespace FileManager
                 return;
             }
 
-            IFileSystemEntry entry = (IFileSystemEntry)_lastFocusedDataGrid.SelectedItem;
-            if (entry.Type != EntryType.File)
-            {
-                return;
-            }
-
-            if (!_dropboxManager.UploadFile(entry.Path, entry.Name))
-            {
-                MessageBox.Show("Couldn't upload file.", "Upload failed", MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-                return;
-            }
-
-            MessageBox.Show("File uploaded successfully.", "Upload successful", MessageBoxButton.OK,
-                MessageBoxImage.Information);
+            ActionHandler.UploadEntryToDropboxAction((IFileSystemEntry)_lastFocusedDataGrid.SelectedItem);
         }
 
         private void DataGrid_OnGotFocus(object sender, RoutedEventArgs e)
@@ -482,12 +400,7 @@ namespace FileManager
 
         private AppPane GetPaneByGrid(DataGrid grid)
         {
-            if (grid.Name == "LeftPaneData")
-            {
-                return _leftPane;
-            }
-
-            return _rightPane;
+            return grid.Name == "LeftPaneData" ? _leftPane : _rightPane;
         }
 
         private void ZipButton_OnClick(object sender, RoutedEventArgs e)
