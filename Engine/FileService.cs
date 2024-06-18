@@ -67,7 +67,7 @@ namespace Engine
 
         public void CreateDirectory(string path, string name)
         {
-            string fullPath = $@"{path}\{name}";
+            var fullPath = $@"{path}\{name}";
             if (!Directory.Exists(fullPath))
             {
                 Directory.CreateDirectory(fullPath);

@@ -94,7 +94,7 @@ public class ActionHandler
             MessageBoxImage.Information);
     }
 
-    public static void MoveEntries(List<IFileSystemEntry> entries, AppPane pane)
+    public static void MoveEntriesAction(List<IFileSystemEntry> entries, AppPane pane)
     {
         if (entries.Count <= 0) return;
         foreach (IFileSystemEntry item in entries)
@@ -110,7 +110,7 @@ public class ActionHandler
         }
     }
 
-    public static void CopyEntries(List<IFileSystemEntry> entries, AppPane pane)
+    public static void CopyEntriesAction(List<IFileSystemEntry> entries, AppPane pane)
     {
         if (entries.Count <= 0) return;
         foreach (IFileSystemEntry item in entries)
@@ -126,5 +126,59 @@ public class ActionHandler
                 FileService.CopyDirectory(sourceDir, targetDir);
             }
         }
+    }
+
+    public static void CreateDirectoryAction(AppPane pane, Window owner)
+    {
+        var inputWindow = new InputDialogWindow("Enter the name for new directory")
+        {
+            Owner = owner
+        };
+        if (inputWindow.ShowDialog() != true) return;
+        var input = inputWindow.InputText;
+        if (input == string.Empty) return;
+        pane.CreateDirectory(input);
+        pane.Refresh();
+    }
+
+    public static void DeepSearchDirectoryAction(AppPane pane, Window owner)
+    {
+        var inputWindow = new InputDialogWindow("Enter name of the file to search for:")
+        {
+            Owner = owner,
+            Title = "Find file"
+        };
+        if (inputWindow.ShowDialog() != true) return;
+        var input = inputWindow.InputText;
+        if (!pane.FindItem(input))
+        {
+            MessageBox.Show("Item not found in current and nested directories.", "Not found",
+                MessageBoxButton.OK,
+                MessageBoxImage.Exclamation);
+        }
+    }
+
+    public static void UnzipAction(IFileSystemEntry entry, AppPane pane, Window owner)
+    {
+        if (entry.Type != EntryType.File || entry.Extension != ".zip")
+        {
+            MessageBox.Show("Cannot unzip file that isn't a zip.", "Can't unzip", MessageBoxButton.OK,
+                MessageBoxImage.Error);
+            return;
+        }
+
+        var inputWindow = new InputDialogWindow("Enter the name of target directory")
+        {
+            Owner = owner
+        };
+        if (inputWindow.ShowDialog() != true) return;
+        var input = inputWindow.InputText;
+        if (input == string.Empty)
+        {
+            input = entry.Name.Replace(".zip", "");
+        }
+
+        FileService.UnzipFile(entry, input);
+        pane.Refresh();
     }
 }

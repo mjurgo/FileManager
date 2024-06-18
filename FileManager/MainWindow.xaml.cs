@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System.IO;
-using Engine;
+﻿using Engine;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -156,12 +154,12 @@ namespace FileManager
             {
                 if (_itemsToCut.Count > 0)
                 {
-                    ActionHandler.MoveEntries(_itemsToCut, pane);
+                    ActionHandler.MoveEntriesAction(_itemsToCut, pane);
                     _itemsToCut.Clear();
                 }
                 else
                 {
-                    ActionHandler.CopyEntries(_itemsToCopy, pane);
+                    ActionHandler.CopyEntriesAction(_itemsToCopy, pane);
                 }
 
                 pane.Refresh();
@@ -170,80 +168,50 @@ namespace FileManager
 
         private void HandleDoubleModifiersShortcuts(object sender)
         {
+            var pane = GetPaneToHandle(sender);
             if (Keyboard.IsKeyDown(Key.N))
             {
-                InputDialogWindow inputWindow = new InputDialogWindow("Enter the name for new directory");
-                inputWindow.Owner = this;
-                if (inputWindow.ShowDialog() == true)
-                {
-                    string input = inputWindow.InputText;
-                    var pane = GetPaneToHandle(sender);
-                    pane.CreateDirectory(input);
-                    pane.Refresh();
-                }
+                ActionHandler.CreateDirectoryAction(pane, this);
             }
 
             if (Keyboard.IsKeyDown(Key.F))
             {
-                InputDialogWindow inputWindow = new InputDialogWindow("Enter name of the file to search for:");
-                inputWindow.Owner = this;
-                inputWindow.Title = "Find file";
-                if (inputWindow.ShowDialog() == true)
-                {
-                    string input = inputWindow.InputText;
-                    var pane = GetPaneToHandle(sender);
-                    bool found = pane.FindItem(input);
-                    if (!found)
-                    {
-                        MessageBox.Show("Item not found in current and nested directories.", "Not found",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Exclamation);
-                    }
-                }
+                ActionHandler.DeepSearchDirectoryAction(pane, this);
             }
         }
 
-        private T? FindParent<T>(DependencyObject child) where T : DependencyObject
+        private static T? FindParent<T>(DependencyObject child) where T : DependencyObject
         {
-            DependencyObject? parentObject = VisualTreeHelper.GetParent(child);
+            var parentObject = VisualTreeHelper.GetParent(child);
 
             if (parentObject == null)
                 return null;
 
-            T? parent = parentObject as T;
+            var parent = parentObject as T;
             return parent ?? FindParent<T>(parentObject);
         }
 
         public AppPane GetPaneToHandle(object sender)
         {
-            if (sender is DataGridRow clickedRow)
+            if (sender is not DataGridRow clickedRow) throw new Exception("Cannot identify sender as DataGridRow");
+            var parentDataGrid = FindParent<DataGrid>(clickedRow);
+
+            if (parentDataGrid == null)
             {
-                DataGrid? parentDataGrid = FindParent<DataGrid>(clickedRow);
-
-                if (parentDataGrid == null)
-                {
-                    throw new Exception("Could not find parent data grid for clicked row");
-                }
-
-                if (parentDataGrid.Name == "LeftPaneData")
-                {
-                    return _leftPane;
-                }
-
-                if (parentDataGrid.Name == "RightPaneData")
-                {
-                    return _rightPane;
-                }
-
-                throw new Exception("Unknown pane name");
+                throw new Exception("Could not find parent data grid for clicked row");
             }
 
-            throw new Exception("Cannot identify sender as DataGridRow");
+            return parentDataGrid.Name switch
+            {
+                "LeftPaneData" => _leftPane,
+                "RightPaneData" => _rightPane,
+                _ => throw new Exception("Unknown pane name")
+            };
         }
 
         private void MenuConfiguration_Click(object sender, RoutedEventArgs e)
         {
-            ConfigWindow window = new ConfigWindow();
+            var window = new ConfigWindow();
             window.Show();
         }
 
@@ -255,58 +223,48 @@ namespace FileManager
                 return;
             }
 
-            if (e.Key == Key.Enter)
+            if (e.Key != Key.Enter) return;
+            var pane = searchBox.Name switch
             {
-                var pane = searchBox.Name switch
-                {
-                    "LeftPaneSearch" => _leftPane,
-                    "RightPaneSearch" => _rightPane,
-                    _ => null,
-                };
-                if (pane == null)
-                {
-                    return;
-                }
+                "LeftPaneSearch" => _leftPane,
+                "RightPaneSearch" => _rightPane,
+                _ => null,
+            };
+            if (pane == null)
+            {
+                return;
+            }
 
-                var itemFound = pane.FindItemInCurrentLocation(searchBox.PaneSearchTextBox.Text);
-                if (!itemFound)
-                {
-                    MessageBox.Show("Item not found in current location.", "Not found", MessageBoxButton.OK,
-                        MessageBoxImage.Exclamation);
-                }
+            var itemFound = pane.FindItemInCurrentLocation(searchBox.PaneSearchTextBox.Text);
+            if (!itemFound)
+            {
+                MessageBox.Show("Item not found in current location.", "Not found", MessageBoxButton.OK,
+                    MessageBoxImage.Exclamation);
             }
         }
 
         private void GoBackButton_Click(object sender, RoutedEventArgs e)
         {
-            var pane = (sender as Button).Name switch
+            var pane = (sender as Button)?.Name switch
             {
                 "LeftPaneGoBackButton" => _leftPane,
                 "RightPaneGoBackButton" => _rightPane,
                 _ => null,
             };
-            if (pane == null)
-            {
-                return;
-            }
 
-            pane.GoDirBack();
+            pane?.GoDirBack();
         }
 
         private void GoForwardButton_Click(object sender, RoutedEventArgs e)
         {
-            var pane = (sender as Button).Name switch
+            var pane = (sender as Button)?.Name switch
             {
                 "LeftPaneGoForwardButton" => _leftPane,
                 "RightPaneGoForwardButton" => _rightPane,
                 _ => null,
             };
-            if (pane == null)
-            {
-                return;
-            }
 
-            pane.GoDirForward();
+            pane?.GoDirForward();
         }
 
         public void AddItemToCut(IFileSystemEntry item)
@@ -376,26 +334,7 @@ namespace FileManager
             }
 
             IFileSystemEntry entry = (IFileSystemEntry)_lastFocusedDataGrid.SelectedItem;
-            if (entry.Type != EntryType.File || entry.Extension != ".zip")
-            {
-                MessageBox.Show("Cannot unzip file that isn't a zip.", "Can't unzip", MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-                return;
-            }
-
-            var inputWindow = new InputDialogWindow("Enter the name of target directory")
-            {
-                Owner = this
-            };
-            if (inputWindow.ShowDialog() != true) return;
-            var input = inputWindow.InputText;
-            if (input == string.Empty)
-            {
-                input = entry.Name.Replace(".zip", "");
-            }
-
-            _fileService.UnzipFile(entry, input);
-            GetPaneByGrid(_lastFocusedDataGrid).Refresh();
+            ActionHandler.UnzipAction(entry, GetPaneByGrid(_lastFocusedDataGrid), this);
         }
 
         private AppPane GetPaneByGrid(DataGrid grid)
@@ -438,16 +377,8 @@ namespace FileManager
 
         private void CreateFolderButton_OnClick(object sender, RoutedEventArgs e)
         {
-            InputDialogWindow inputWindow = new InputDialogWindow("Enter the name for new directory");
-            inputWindow.Owner = this;
-            if (inputWindow.ShowDialog() == true)
-            {
-                string input = inputWindow.InputText;
-                if (_lastFocusedDataGrid == null) return;
-                var pane = GetPaneByGrid(_lastFocusedDataGrid);
-                pane.CreateDirectory(input);
-                pane.Refresh();
-            }
+            if (_lastFocusedDataGrid == null) return;
+            ActionHandler.CreateDirectoryAction(GetPaneByGrid(_lastFocusedDataGrid), this);
         }
     }
 }
