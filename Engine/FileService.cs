@@ -4,8 +4,6 @@ namespace Engine
 {
     public class FileService : IFileService
     {
-        private const string DefaultPath = "C:";
-
         public List<IFileSystemEntry> ListDir(string path)
         {
             if (!Directory.Exists(path))
@@ -13,9 +11,11 @@ namespace Engine
                 throw new DirectoryNotFoundException($"Directory {path} doesn't exist.");
             }
 
-            var options = new EnumerationOptions();
-            options.ReturnSpecialDirectories = false;
-            options.AttributesToSkip = FileAttributes.Hidden | FileAttributes.System;
+            var options = new EnumerationOptions
+            {
+                ReturnSpecialDirectories = false,
+                AttributesToSkip = FileAttributes.Hidden | FileAttributes.System
+            };
 
             DirectoryInfo di = new DirectoryInfo(path);
             var files = di.GetFiles("*", options);

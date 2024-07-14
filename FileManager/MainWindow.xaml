@@ -7,7 +7,7 @@
         xmlns:appControls="clr-namespace:FileManager.Controls"
         mc:Ignorable="d"
         WindowState="Maximized"
-        Title="MainWindow" Height="450" Width="800">
+        Title="File Manager" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -75,8 +75,8 @@
                   IsReadOnly="True" Margin="0,0,0,0" Grid.RowSpan="2">
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
-                    <Setter Property="Background" Value="{DynamicResource row}" />
-                    <Setter Property="Foreground" Value="{DynamicResource textrow}" />
+                    <Setter Property="Background" Value="{DynamicResource Row}" />
+                    <Setter Property="Foreground" Value="{DynamicResource Textrow}" />
                     <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
                     <EventSetter Event="KeyDown" Handler="Row_KeyDown" />
                     <Setter Property="ContextMenu">
@@ -103,8 +103,8 @@
                   IsReadOnly="True" Margin="0,0,0,0" Grid.RowSpan="2">
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
-                    <Setter Property="Background" Value="{DynamicResource row}" />
-                    <Setter Property="Foreground" Value="{DynamicResource textrow}" />
+                    <Setter Property="Background" Value="{DynamicResource Row}" />
+                    <Setter Property="Foreground" Value="{DynamicResource Textrow}" />
                     <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
                     <EventSetter Event="KeyDown" Handler="Row_KeyDown" />
                     <Setter Property="ContextMenu">

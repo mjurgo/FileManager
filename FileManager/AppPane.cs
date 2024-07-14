@@ -75,7 +75,7 @@ public class AppPane
         Refresh();
     }
 
-    private void OpenFile(IFileSystemEntry item)
+    private static void OpenFile(IFileSystemEntry item)
     {
         try
         {
@@ -88,35 +88,30 @@ public class AppPane
         }
         catch (Exception e)
         {
-            // TODO: Proper log
-            Console.WriteLine(e);
+            AppLogger.Error($"error while opening file: {e.Message}");
         }
     }
 
     public void GoDirForward()
     {
-        if (CanGoDirForward())
-        {
-            Content = _fileService.ListDir(_viewHistory[_currentDirIndex + 1].Path);
-            _currentDirIndex++;
-            _assignedGrid.ItemsSource = Content;
-            _pathBox.SetPath(GetCurrentPath());
-        }
+        if (!CanGoDirForward()) return;
+        Content = _fileService.ListDir(_viewHistory[_currentDirIndex + 1].Path);
+        _currentDirIndex++;
+        _assignedGrid.ItemsSource = Content;
+        _pathBox.SetPath(GetCurrentPath());
     }
 
     public void GoDirBack()
     {
-        if (CanGoDirBack())
+        if (!CanGoDirBack()) return;
+        if (_viewHistory[_currentDirIndex].Type == EntryType.SearchResult)
         {
-            if (_viewHistory[_currentDirIndex].Type == EntryType.SearchResult)
-            {
-                _viewHistory.Remove(_viewHistory[_currentDirIndex]);
-            }
-            Content = _fileService.ListDir(_viewHistory[_currentDirIndex - 1].Path);
-            _currentDirIndex--;
-            _assignedGrid.ItemsSource = Content;
-            _pathBox.SetPath(GetCurrentPath());
+            _viewHistory.Remove(_viewHistory[_currentDirIndex]);
         }
+        Content = _fileService.ListDir(_viewHistory[_currentDirIndex - 1].Path);
+        _currentDirIndex--;
+        _assignedGrid.ItemsSource = Content;
+        _pathBox.SetPath(GetCurrentPath());
     }
 
     private bool CanGoDirBack()
@@ -244,7 +239,6 @@ public class AppPane
 
     public bool FindItem(string name)
     {
-        // TODO: move to FileService
         var di = new DirectoryInfo(_viewHistory[_currentDirIndex].Path);
         var items = di.GetFileSystemInfos($"*{name}*", SearchOption.AllDirectories);
 

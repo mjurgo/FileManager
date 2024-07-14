@@ -32,9 +32,9 @@ public class DropboxManager
         {
             return false;
         }
-        catch (DropboxException)
+        catch (DropboxException e)
         {
-            // TODO: Add error log
+            AppLogger.Error($"error while uploading file to dropbox: {e.Message}");
             return false;
         }
 

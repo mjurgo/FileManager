@@ -10,7 +10,15 @@ internal class AppFile : IFileSystemEntry
     public long? Size { get; }
     public EntryType Type { get; }
 
-        
+    private static readonly string[] TXT_EXTENSIONS = new string[]
+    {
+        ".txt",
+        ".csproj",
+        ".log",
+        ".cs",
+    };
+
+
     public AppFile(string path, string name, DateTime modified, DateTime created, string? extension, long? size)
     {
         Name = name;
@@ -29,6 +37,6 @@ internal class AppFile : IFileSystemEntry
 
     public bool IsTextFile()
     {
-        return Extension == ".txt";
+        return TXT_EXTENSIONS.Contains(Extension);
     }
 }

@@ -182,13 +182,21 @@ namespace FileManager
 
         private static T? FindParent<T>(DependencyObject child) where T : DependencyObject
         {
-            var parentObject = VisualTreeHelper.GetParent(child);
+            while (true)
+            {
+                var parentObject = VisualTreeHelper.GetParent(child);
 
-            if (parentObject == null)
-                return null;
-
-            var parent = parentObject as T;
-            return parent ?? FindParent<T>(parentObject);
+                switch (parentObject)
+                {
+                    case null:
+                        return null;
+                    case T parent:
+                        return parent;
+                    default:
+                        child = parentObject;
+                        break;
+                }
+            }
         }
 
         public AppPane GetPaneToHandle(object sender)
@@ -217,7 +225,6 @@ namespace FileManager
 
         private void PaneSearch_OnKeyDown(object sender, KeyEventArgs e)
         {
-            // TODO: Add proper logs in case of errors
             if (sender is not PaneSearchBox searchBox)
             {
                 return;

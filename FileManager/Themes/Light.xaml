@@ -3,8 +3,8 @@
     <SolidColorBrush Color="#dcdde1" x:Key="LightBackgroundColor"/>
     <SolidColorBrush Color="#000000" x:Key="LightTextColor"/>
     <SolidColorBrush Color="#fff" x:Key="LightGridColor"/>
-    <SolidColorBrush x:Key="row" Color="#fff"/>
-    <SolidColorBrush x:Key="textrow" Color="Black"/>
+    <SolidColorBrush x:Key="Row" Color="#fff"/>
+    <SolidColorBrush x:Key="Textrow" Color="Black"/>
     <Style TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource LightTextColor}"/>
     </Style>

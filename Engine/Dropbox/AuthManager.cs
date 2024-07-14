@@ -70,5 +70,7 @@ internal class AuthManager
 
         var tkn = result.AccessToken;
         _keyManager.SaveDropboxToken(tkn);
+        
+        http.Close();
     }
 }
